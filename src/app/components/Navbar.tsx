@@ -321,7 +321,7 @@ export default function Navbar() {
           </DialogHeader>
           {showLogin ? (
             <Login 
-              onLogininSuccess={handleLoginSuccess}
+              onLoginSuccess={handleLoginSuccess}
               switchToSignin={switchAuthMode}
             />
           ) : (

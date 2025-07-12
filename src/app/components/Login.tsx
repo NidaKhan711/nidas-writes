@@ -1,6 +1,4 @@
-// components/Login.jsx
 'use client';
-
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
@@ -11,18 +9,23 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-
-interface LoginProps {
-  onSigninSuccess: (userData: { name: string; email: string }) => void;
-  switchToLogin: () => void;
+interface AuthData {
+  name: string;
+  email: string;
+  token?: string; // Added token for authentication
 }
 
+interface LoginProps {
+  onLoginSuccess: (userData: AuthData) => void; // Corrected prop name
+  switchToSignin: () => void;
+}
 
-export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
+export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const containerVariants = {
@@ -47,23 +50,58 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
     },
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsLoading(true);
 
-    // Basic validation
     if (!email || !password) {
       setError('Please fill in all fields');
+      setIsLoading(false);
       return;
     }
 
-    // Simulate successful login
-    setSuccess('Login successful! Redirecting...');
-    setTimeout(() => {
-      router.push('/');
-      // You might want to close the dialog here if it's open
-    }, 2000);
+    try {
+      // Simulate API call - replace with your actual authentication
+      const response = await authenticateUser(email, password);
+      
+      setSuccess('Login successful! Redirecting...');
+      
+      // Call the success handler with user data
+      onLoginSuccess({
+        name: response.name,
+        email: response.email,
+        token: response.token // Include token if available
+      });
+
+      // Redirect after delay
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Mock authentication function - replace with real API call
+  const authenticateUser = async (email: string, password: string): Promise<AuthData> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (email === 'user@example.com' && password === 'password123') {
+          resolve({
+            name: 'John Doe',
+            email: email,
+            token: 'mock-jwt-token-12345'
+          });
+        } else {
+          reject(new Error('Invalid email or password'));
+        }
+      }, 1500);
+    });
   };
 
   return (
@@ -72,8 +110,9 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
       animate="visible"
       variants={containerVariants}
       className="space-y-4 mt-4"
-      id='Login'
+      id="Login"
     >
+      {/* Error and Success messages remain the same */}
       {error && (
         <motion.div variants={itemVariants}>
           <Alert variant="destructive">
@@ -99,6 +138,7 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
         className="space-y-4"
         onSubmit={handleSubmit}
       >
+        {/* Form fields remain the same */}
         <motion.div variants={itemVariants}>
           <label htmlFor="email" className="block text-sm font-medium text-[#3A1700]">
             Email
@@ -109,6 +149,7 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1"
+            disabled={isLoading}
           />
         </motion.div>
 
@@ -122,6 +163,7 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1"
+            disabled={isLoading}
           />
         </motion.div>
 
@@ -140,8 +182,9 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
             type="submit"
             className="w-20"
             style={{ backgroundColor: '#996568' }}
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </motion.div>
       </motion.form>
@@ -151,14 +194,15 @@ export default function Login({ onSigninSuccess, switchToLogin }: LoginProps) {
         className="text-center text-sm text-gray-600"
       >
         Don't have an account?{' '}
-        <Link
-          onClick={switchToLogin}
-          href="/Sign"
+        <button
+          type="button"
+          onClick={switchToSignin}
           className="font-medium hover:underline"
           style={{ color: '#996568' }}
+          disabled={isLoading}
         >
           Sign up
-        </Link>
+        </button>
       </motion.div>
     </motion.div>
   );

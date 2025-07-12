@@ -1,4 +1,3 @@
-// components/Signin.jsx
 'use client';
 
 import { motion } from 'framer-motion';
@@ -8,8 +7,13 @@ import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Terminal } from 'lucide-react';
 
+interface AuthData {
+  name: string;
+  email: string;
+}
+
 interface SigninProps {
-  onSigninSuccess: (userData: { name: string; email: string }) => void;
+  onSigninSuccess: (userData: AuthData) => void;
   switchToLogin: () => void;
 }
 
@@ -58,11 +62,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
     }
 
     setSuccess('Sign in successful!');
-    const userData = {
-      name,
-      email,
-    };
-    onSigninSuccess(userData);
+    onSigninSuccess({ name, email });
   };
 
   return (
@@ -130,7 +130,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             className="w-20"
             style={{ backgroundColor: '#996568' }}
           >
-            Sign in
+            Sign up
           </Button>
         </motion.div>
       </motion.form>

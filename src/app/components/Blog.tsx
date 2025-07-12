@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Book from "../assets/Images/book.jpg"
@@ -7,7 +7,7 @@ import Image from "next/image";
 import Laptop from "../assets/Images/laptop.jpg"
 const Blog = () => {
     return (
-        <div className="min-h-screen p-8 mt-16 ">
+        <div className="min-h-screen p-8 mt-16 " id="blog">
             {/* Categories Header */}
             <div className="mb-10">
                 <h1 className="text-3xl font-extrabold mb-4 text-[#341601] flex justify-center items-center">
