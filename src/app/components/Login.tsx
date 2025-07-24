@@ -167,16 +167,6 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
           />
         </motion.div>
 
-        <motion.div variants={itemVariants} className="text-right">
-          <Link
-            href="/forgot-password"
-            className="text-sm font-medium hover:underline"
-            style={{ color: '#996568' }}
-          >
-            Forgot password?
-          </Link>
-        </motion.div>
-
         <motion.div variants={itemVariants}>
           <Button
             type="submit"

@@ -40,7 +40,7 @@ type User = {
 const NAV_ITEMS = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Blogs', path: '/blogs' },
+  { name: 'Blogs', path: '/blog' },
   { name: 'Contact', path: '/contact' },
 ];
 

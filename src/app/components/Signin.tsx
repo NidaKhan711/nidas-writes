@@ -23,6 +23,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,23 +47,34 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
     },
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setIsLoading(true); // Set loading to true on submission
 
     if (!name || !email || !password) {
       setError('Please fill in all fields');
+      setIsLoading(false); // Set loading to false on error
       return;
     }
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters');
+      setIsLoading(false); // Set loading to false on error
       return;
     }
 
-    setSuccess('Sign in successful!');
-    onSigninSuccess({ name, email });
+    try {
+      // Simulate API call for sign-in
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
+      setSuccess('Sign in successful!');
+      onSigninSuccess({ name, email });
+    } catch (err) {
+      setError('Sign in failed. Please try again.'); // Generic error for simulated API
+    } finally {
+      setIsLoading(false); // Set loading to false after completion
+    }
   };
 
   return (
@@ -98,29 +110,44 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
         onSubmit={handleSubmit}
       >
         <motion.div variants={itemVariants}>
+          <label htmlFor="name" className="block text-sm font-medium text-[#3A1700]">
+            Name
+          </label>
           <Input
             type="text"
-            placeholder="Name"
+            id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            className="mt-1"
+            disabled={isLoading}
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
+          <label htmlFor="email" className="block text-sm font-medium text-[#3A1700]">
+            Email
+          </label>
           <Input
             type="email"
-            placeholder="Email"
+            id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className="mt-1"
+            disabled={isLoading}
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
+          <label htmlFor="password" className="block text-sm font-medium text-[#3A1700]">
+            Password
+          </label>
           <Input
             type="password"
-            placeholder="Password"
+            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="mt-1"
+            disabled={isLoading}
           />
         </motion.div>
 
@@ -129,8 +156,9 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             type="submit"
             className="w-20"
             style={{ backgroundColor: '#996568' }}
+            disabled={isLoading}
           >
-            Sign up
+            {isLoading ? 'Signing up...' : 'Sign up'}
           </Button>
         </motion.div>
       </motion.form>
@@ -145,6 +173,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
           onClick={switchToLogin}
           className="font-medium hover:underline"
           style={{ color: '#996568' }}
+          disabled={isLoading}
         >
           Login
         </button>
