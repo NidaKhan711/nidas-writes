@@ -9,16 +9,15 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import {
   DropdownMenu,
@@ -30,17 +29,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Signin from './Signin';
 import Login from './Login';
 
-// Types
-type User = {
+interface AuthData {
   name: string;
+  email?: string;
   avatar?: string;
-  [key: string]: any;
-};
+}
+
+interface User extends AuthData {
+  id: string;
+}
 
 const NAV_ITEMS = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Blogs', path: '/blog' },
+  { name: 'Blogs', path: '/blogs' },
   { name: 'Contact', path: '/contact' },
 ];
 
@@ -73,31 +75,47 @@ export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-        setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('user');
+    const checkAuth = () => {
+      if (typeof window !== 'undefined') {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          try {
+            const userData = JSON.parse(storedUser) as User;
+            setUser({
+              ...userData,
+              avatar: userData.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random`
+            });
+            setIsLoggedIn(true);
+          } catch (error) {
+            console.error('Error parsing user data:', error);
+            localStorage.removeItem('user');
+          }
+        }
       }
-    }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
-  // Handlers
-  const handleLoginSuccess = (userData: User) => {
-    const userWithAvatar = {
-      ...userData,
+  const generateId = () => {
+    return Math.random().toString(36).substring(2) + Date.now().toString(36);
+  };
+
+  const handleAuthSuccess = (userData: AuthData) => {
+    const userWithDefaults: User = {
+      id: generateId(),
+      name: userData.name,
+      email: userData.email,
       avatar: userData.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=random`
     };
     
-    setUser(userWithAvatar);
+    setUser(userWithDefaults);
     setIsLoggedIn(true);
-    localStorage.setItem('user', JSON.stringify(userWithAvatar));
+    localStorage.setItem('user', JSON.stringify(userWithDefaults));
     setAuthDialogOpen(false);
     setIsOpen(false);
   };
@@ -115,154 +133,12 @@ export default function Navbar() {
   };
 
   const switchAuthMode = () => {
-    setShowLogin(!showLogin);
+    setShowLogin(prev => !prev);
   };
 
-  // Components
-  const Logo = () => (
-    <motion.div
-      whileHover={{ scale: 1.05 }}
-      className="flex-shrink-0 flex items-center justify-center pl-8"
-    >
-      <Link href="/" className="text-2xl font-bold text-[#341601]">
-        Nida&apos;s Writes
-      </Link>
-    </motion.div>
-  );
-
-  const NavLinks = ({ isMobile = false }) => (
-    <>
-      {NAV_ITEMS.map((item) => (
-        <motion.div 
-          key={item.name} 
-          variants={!isMobile ? ANIMATION_VARIANTS.item : undefined}
-          whileHover={isMobile ? { scale: 1.02 } : undefined}
-          whileTap={isMobile ? { scale: 0.98 } : undefined}
-        >
-          <Link
-            href={item.path}
-            className={isMobile 
-              ? "block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100"
-              : "text-amber-950 hover:text-amber-700 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
-            }
-            onClick={() => isMobile && setIsOpen(false)}
-          >
-            {item.name}
-          </Link>
-        </motion.div>
-      ))}
-    </>
-  );
-
-  const UserProfile = ({ isMobile = false }) => (
-    <>
-      {isLoggedIn ? (
-        isMobile ? (
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center px-3 py-2"
-          >
-            <Avatar className="h-8 w-8 mr-2">
-              <AvatarImage src={user?.avatar} alt={user?.name} />
-              <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <span className="text-gray-700">{user?.name}</span>
-            <Button 
-              variant="ghost" 
-              onClick={() => setLogoutDialogOpen(true)}
-              className="ml-auto text-red-600"
-            >
-              Logout
-            </Button>
-          </motion.div>
-        ) : (
-          <motion.div variants={ANIMATION_VARIANTS.item}>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={user?.avatar} alt={user?.name} />
-                    <AvatarFallback>{user?.name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuItem>
-                  <Link href="/profile" className="w-full">
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/settings" className="w-full">
-                    Settings
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)}>
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </motion.div>
-        )
-      ) : (
-        <motion.div 
-          variants={!isMobile ? ANIMATION_VARIANTS.item : undefined}
-          whileHover={isMobile ? { scale: 1.02 } : undefined}
-          whileTap={isMobile ? { scale: 0.98 } : undefined}
-        >
-          <Button
-            variant="outline"
-            onClick={openAuthDialog}
-            className={isMobile 
-              ? "w-full px-3 py-2 rounded-md text-base font-medium text-[#6F4E37] bg-[#FDF3EB] hover:bg-[#FCECD8] mt-2"
-              : "bg-[#ffedde] text-[#6F4E37] px-6 py-2 rounded-md border-2 border-[rgb(254,217,186)] text-base font-medium hover:bg-[#ffd49e] transition-colors duration-300 shadow"
-            }
-          >
-            Sign In
-          </Button>
-        </motion.div>
-      )}
-    </>
-  );
-
-  const MobileMenuButton = () => (
-    <button
-      onClick={() => setIsOpen(!isOpen)}
-      className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
-      aria-expanded={isOpen}
-      aria-label="Toggle menu"
-    >
-      <svg
-        className={`${isOpen ? 'hidden' : 'block'} h-6 w-6`}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M4 6h16M4 12h16M4 18h16"
-        />
-      </svg>
-      <svg
-        className={`${isOpen ? 'block' : 'hidden'} h-6 w-6`}
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
-    </button>
-  );
+  if (isLoading) {
+    return <div className="h-16 bg-[#FFFCF1]"></div>;
+  }
 
   return (
     <>
@@ -270,13 +146,19 @@ export default function Navbar() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-[#FFFCF1] w-full fixed top-0 z-20"
+        className="bg-[#FFFCF1] w-full fixed top-0 z-20 shadow-sm"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
-            <Logo />
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex-shrink-0 flex items-center"
+            >
+              <Link href="/" className="text-2xl font-bold text-[#341601]">
+                Nida&apos;s Writes
+              </Link>
+            </motion.div>
 
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
               <motion.div
                 variants={ANIMATION_VARIANTS.container}
@@ -284,19 +166,107 @@ export default function Navbar() {
                 animate="visible"
                 className="flex space-x-8"
               >
-                <NavLinks />
+                {NAV_ITEMS.map((item) => (
+                  <motion.div key={item.name} variants={ANIMATION_VARIANTS.item}>
+                    <Link
+                      href={item.path}
+                      className="text-amber-950 hover:text-amber-700 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
+                ))}
               </motion.div>
-              <UserProfile />
+
+              {isLoggedIn ? (
+                <motion.div variants={ANIMATION_VARIANTS.item}>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
+                          <AvatarFallback>
+                            {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                          </AvatarFallback>
+                        </Avatar>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56" align="end" forceMount>
+                      <DropdownMenuItem asChild>
+                        <Link href="/profile" className="w-full">
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/settings" className="w-full">
+                          Settings
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setLogoutDialogOpen(true)}
+                        className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </motion.div>
+              ) : (
+                <motion.div variants={ANIMATION_VARIANTS.item}>
+                  <Button
+                    variant="outline"
+                    onClick={openAuthDialog}
+                    className="bg-[#ffedde] text-[#6F4E37] px-6 py-2 rounded-md border-2 border-[rgb(254,217,186)] text-base font-medium hover:bg-[#ffd49e] transition-colors duration-300 shadow"
+                  >
+                    Sign In
+                  </Button>
+                </motion.div>
+              )}
             </div>
 
-            {/* Mobile menu button */}
             <div className="md:hidden flex items-center">
-              <MobileMenuButton />
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
+                aria-expanded={isOpen}
+                aria-label="Toggle menu"
+              >
+                {isOpen ? (
+                  <svg
+                    className="h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="h-6 w-6"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                )}
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <motion.div
           initial={false}
           animate={isOpen ? 'open' : 'closed'}
@@ -304,42 +274,89 @@ export default function Navbar() {
           transition={{ duration: 0.3 }}
           className="md:hidden overflow-hidden"
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white">
-            <NavLinks isMobile />
-            <UserProfile isMobile />
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+            {NAV_ITEMS.map((item) => (
+              <motion.div 
+                key={item.name}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Link
+                  href={item.path}
+                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              </motion.div>
+            ))}
+
+            {isLoggedIn ? (
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center px-3 py-2 space-x-3"
+              >
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
+                  <AvatarFallback>
+                    {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-gray-700 flex-grow">{user?.name}</span>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => setLogoutDialogOpen(true)}
+                  className="text-red-600 hover:bg-red-50"
+                >
+                  Logout
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  variant="outline"
+                  onClick={openAuthDialog}
+                  className="w-full px-3 py-2 rounded-md text-base font-medium text-[#6F4E37] bg-[#FDF3EB] hover:bg-[#FCECD8]"
+                >
+                  Sign In
+                </Button>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </motion.nav>
 
-      {/* Authentication Dialog */}
       <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="text-center text-[#3A1700]">
-              {showLogin ? 'Login' : 'Sign In'}
+              {showLogin ? 'Login' : 'Create Account'}
             </DialogTitle>
           </DialogHeader>
           {showLogin ? (
             <Login 
-              onLoginSuccess={handleLoginSuccess}
+              onLoginSuccess={handleAuthSuccess}
               switchToSignin={switchAuthMode}
             />
           ) : (
             <Signin 
-              onSigninSuccess={handleLoginSuccess} 
+              onSigninSuccess={handleAuthSuccess} 
               switchToLogin={switchAuthMode}
             />
           )}
         </DialogContent>
       </Dialog>
 
-      {/* Logout Confirmation Dialog */}
       <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
             <AlertDialogDescription>
-              You'll need to sign in again to access your account.
+               You&apos;ll need to sign in again to access your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

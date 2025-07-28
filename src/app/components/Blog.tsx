@@ -6,9 +6,10 @@ import Mind from "../assets/Images/Mind.png"
 import Image from "next/image";
 import Laptop from "../assets/Images/laptop.jpg"
 
+
 const Blog = () => {
     return (
-        <div className="min-h-screen p-15 z-60 bg-[#fffcf1] " id="blog">
+        <div className="min-h-screen p-15 z-60 bg-[#fffcf1] ">
             {/* Categories Header */}
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}

@@ -23,7 +23,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -47,33 +47,33 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
     },
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     setError('');
     setSuccess('');
-    setIsLoading(true); // Set loading to true on submission
-
-    if (!name || !email || !password) {
-      setError('Please fill in all fields');
-      setIsLoading(false); // Set loading to false on error
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      setIsLoading(false); // Set loading to false on error
-      return;
-    }
 
     try {
-      // Simulate API call for sign-in
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate network delay
-      setSuccess('Sign in successful!');
-      onSigninSuccess({ name, email });
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Signup failed');
+      }
+
+      setSuccess(data.message || 'Signup successful!');
+      if (data.user) {
+        onSigninSuccess(data.user);
+      }
     } catch (err) {
-      setError('Sign in failed. Please try again.'); // Generic error for simulated API
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
-      setIsLoading(false); // Set loading to false after completion
+      setIsLoading(false);
     }
   };
 
@@ -120,6 +120,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             onChange={(e) => setName(e.target.value)}
             className="mt-1"
             disabled={isLoading}
+            required
           />
         </motion.div>
 
@@ -134,6 +135,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1"
             disabled={isLoading}
+            required
           />
         </motion.div>
 
@@ -148,6 +150,8 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1"
             disabled={isLoading}
+            required
+            minLength={6}
           />
         </motion.div>
 
