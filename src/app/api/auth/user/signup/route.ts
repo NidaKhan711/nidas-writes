@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import userModel from "@/models/userModel";
 import { connectDB } from "@/db/dbconnect";
 
@@ -19,15 +20,36 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await userModel.create({ name, email, password: hashedPassword });
-    console.log("User created:", user); 
+    console.log("User created:", user);
 
-    return NextResponse.json(
+    // 1️⃣ Generate JWT token
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET || "secret_key",
+      { expiresIn: "1d" }
+    );
+
+    // 2️⃣ Create NextResponse with JSON
+    const res = NextResponse.json(
       { message: "User created", user: { name: user.name, email: user.email } },
       { status: 201 }
     );
+
+    // 3️⃣ Set cookie (HTTP-only, secure)
+    res.cookies.set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 24, // 1 day
+      path: "/",
+    });
+
+    return res;
+
   } catch (error) {
     console.error("Signup Error:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
- 

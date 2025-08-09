@@ -29,6 +29,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Signin from './Signin';
 import Login from './Login';
 
+
 interface AuthData {
   name: string;
   email?: string;
@@ -139,6 +140,29 @@ export default function Navbar() {
   if (isLoading) {
     return <div className="h-16 bg-[#0C0C0C]"></div>;
   }
+
+
+const logoutButton = async () => {
+  try {
+    const res = await fetch('/api/auth/user/logout', {
+      method: 'POST',
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to logout');
+    }
+
+    // Optional: read server response
+    const data = await res.json();
+    console.log(data.message);
+
+    handleLogout(); // e.g., redirect or clear state
+  } catch (error) {
+    console.error('Logout failed:', error);
+    alert('Logout failed. Please try again.');
+  }
+};
+
 
   return (
     <>
@@ -364,7 +388,7 @@ export default function Navbar() {
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction 
-              onClick={handleLogout}
+              onClick={logoutButton}
               className="bg-[#8C1C13] hover:bg-[#7a4f4f] text-[#EFEFEF]"
             >
               Logout
