@@ -137,7 +137,7 @@ export default function Navbar() {
   };
 
   if (isLoading) {
-    return <div className="h-16 bg-[#FFFCF1]"></div>;
+    return <div className="h-16 bg-[#0C0C0C]"></div>;
   }
 
   return (
@@ -146,7 +146,7 @@ export default function Navbar() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-[#FFFCF1] w-full fixed top-0 z-20 shadow-sm"
+        className="bg-[#0C0C0C] w-full fixed top-0 z-20 shadow-sm border-b border-[#1A1A1A]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -154,7 +154,7 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
               className="flex-shrink-0 flex items-center"
             >
-              <Link href="/" className="text-2xl font-bold text-[#341601]">
+              <Link href="/" className="text-2xl font-bold text-[#C49E5C]">
                 Nida&apos;s Writes
               </Link>
             </motion.div>
@@ -170,7 +170,7 @@ export default function Navbar() {
                   <motion.div key={item.name} variants={ANIMATION_VARIANTS.item}>
                     <Link
                       href={item.path}
-                      className="text-amber-950 hover:text-amber-700 px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
+                      className="text-[#EFEFEF] hover:text-[#C49E5C] px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
                     >
                       {item.name}
                     </Link>
@@ -182,29 +182,29 @@ export default function Navbar() {
                 <motion.div variants={ANIMATION_VARIANTS.item}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-[#1A1A1A]">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
-                          <AvatarFallback>
+                          <AvatarFallback className="bg-[#4C5F2A] text-[#EFEFEF]">
                             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                           </AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56" align="end" forceMount>
-                      <DropdownMenuItem asChild>
+                    <DropdownMenuContent className="w-56 bg-[#1A1A1A] border border-[#2A2A2A]" align="end" forceMount>
+                      <DropdownMenuItem asChild className="hover:bg-[#2A2A2A] text-[#EFEFEF]">
                         <Link href="/profile" className="w-full">
                           Profile
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
+                      <DropdownMenuItem asChild className="hover:bg-[#2A2A2A] text-[#EFEFEF]">
                         <Link href="/settings" className="w-full">
                           Settings
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => setLogoutDialogOpen(true)}
-                        className="text-red-600 focus:text-red-600 focus:bg-red-50"
+                        className="text-[#8C1C13] hover:bg-[#2A2A2A] focus:text-[#8C1C13]"
                       >
                         Logout
                       </DropdownMenuItem>
@@ -216,7 +216,7 @@ export default function Navbar() {
                   <Button
                     variant="outline"
                     onClick={openAuthDialog}
-                    className="bg-[#ffedde] text-[#6F4E37] px-6 py-2 rounded-md border-2 border-[rgb(254,217,186)] text-base font-medium hover:bg-[#ffd49e] transition-colors duration-300 shadow"
+                    className="bg-[#4C5F2A] text-[#EFEFEF] px-6 py-2 rounded-md border-2 border-[#5a6f33] text-base font-medium hover:bg-[#5a6f33] transition-colors duration-300 shadow"
                   >
                     Sign In
                   </Button>
@@ -227,7 +227,7 @@ export default function Navbar() {
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none"
+                className="inline-flex items-center justify-center p-2 rounded-md text-[#EFEFEF] hover:text-[#C49E5C] focus:outline-none"
                 aria-expanded={isOpen}
                 aria-label="Toggle menu"
               >
@@ -274,7 +274,7 @@ export default function Navbar() {
           transition={{ duration: 0.3 }}
           className="md:hidden overflow-hidden"
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#1A1A1A] shadow-lg border-t border-[#2A2A2A]">
             {NAV_ITEMS.map((item) => (
               <motion.div 
                 key={item.name}
@@ -283,7 +283,7 @@ export default function Navbar() {
               >
                 <Link
                   href={item.path}
-                  className="block px-3 py-2 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                  className="block px-3 py-2 text-base font-medium text-[#EFEFEF] hover:text-[#C49E5C] hover:bg-[#2A2A2A] rounded-md"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
@@ -299,15 +299,15 @@ export default function Navbar() {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-[#4C5F2A] text-[#EFEFEF]">
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-gray-700 flex-grow">{user?.name}</span>
+                <span className="text-[#EFEFEF] flex-grow">{user?.name}</span>
                 <Button 
                   variant="ghost" 
                   onClick={() => setLogoutDialogOpen(true)}
-                  className="text-red-600 hover:bg-red-50"
+                  className="text-[#8C1C13] hover:bg-[#2A2A2A]"
                 >
                   Logout
                 </Button>
@@ -320,7 +320,7 @@ export default function Navbar() {
                 <Button
                   variant="outline"
                   onClick={openAuthDialog}
-                  className="w-full px-3 py-2 rounded-md text-base font-medium text-[#6F4E37] bg-[#FDF3EB] hover:bg-[#FCECD8]"
+                  className="w-full px-3 py-2 rounded-md text-base font-medium text-[#EFEFEF] bg-[#4C5F2A] hover:bg-[#5a6f33] border border-[#5a6f33]"
                 >
                   Sign In
                 </Button>
@@ -331,9 +331,9 @@ export default function Navbar() {
       </motion.nav>
 
       <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] bg-[#1A1A1A] border border-[#2A2A2A]">
           <DialogHeader>
-            <DialogTitle className="text-center text-[#3A1700]">
+            <DialogTitle className="text-center text-[#C49E5C]">
               {showLogin ? 'Login' : 'Create Account'}
             </DialogTitle>
           </DialogHeader>
@@ -352,18 +352,20 @@ export default function Navbar() {
       </Dialog>
 
       <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-[#1A1A1A] border border-[#2A2A2A]">
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
-            <AlertDialogDescription>
-               You&apos;ll need to sign in again to access your account.
+            <AlertDialogTitle className="text-[#EFEFEF]">Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#B0B0B0]">
+              You&apos;ll need to sign in again to access your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="bg-[#2A2A2A] text-[#EFEFEF] border border-[#3A3A3A] hover:bg-[#3A3A3A]">
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleLogout}
-              className="bg-[#996568] hover:bg-[#7a4f4f]"
+              className="bg-[#8C1C13] hover:bg-[#7a4f4f] text-[#EFEFEF]"
             >
               Logout
             </AlertDialogAction>

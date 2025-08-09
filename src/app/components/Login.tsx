@@ -74,8 +74,6 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
       setSuccess(data.message || 'Login successful!');
       if (data.user) {
         onLoginSuccess(data.user);
-        // Optional: Redirect after successful login
-        // router.push('/dashboard');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
@@ -94,20 +92,20 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
     >
       {error && (
         <motion.div variants={itemVariants}>
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="bg-[#2A1A1A] border-[#8C1C13]">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+            <AlertTitle className="text-[#EFEFEF]">Error</AlertTitle>
+            <AlertDescription className="text-[#B0B0B0]">{error}</AlertDescription>
           </Alert>
         </motion.div>
       )}
 
       {success && (
         <motion.div variants={itemVariants}>
-          <Alert>
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>Success</AlertTitle>
-            <AlertDescription>{success}</AlertDescription>
+          <Alert className="bg-[#1A2A1A] border-[#4C5F2A]">
+            <Terminal className="h-4 w-4 text-[#C49E5C]" />
+            <AlertTitle className="text-[#EFEFEF]">Success</AlertTitle>
+            <AlertDescription className="text-[#B0B0B0]">{success}</AlertDescription>
           </Alert>
         </motion.div>
       )}
@@ -118,7 +116,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
         onSubmit={handleSubmit}
       >
         <motion.div variants={itemVariants}>
-          <label htmlFor="email" className="block text-sm font-medium text-[#3A1700]">
+          <label htmlFor="email" className="block text-sm font-medium text-[#EFEFEF]">
             Email
           </label>
           <Input
@@ -126,14 +124,14 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1"
+            className="mt-1 bg-[#1A1A1A] border-[#2A2A2A] text-[#EFEFEF] focus:border-[#C49E5C]"
             disabled={isLoading}
             required
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label htmlFor="password" className="block text-sm font-medium text-[#3A1700]">
+          <label htmlFor="password" className="block text-sm font-medium text-[#EFEFEF]">
             Password
           </label>
           <Input
@@ -141,7 +139,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1"
+            className="mt-1 bg-[#1A1A1A] border-[#2A2A2A] text-[#EFEFEF] focus:border-[#C49E5C]"
             disabled={isLoading}
             required
             minLength={6}
@@ -151,8 +149,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
         <motion.div variants={itemVariants}>
           <Button
             type="submit"
-            className="w-20"
-            style={{ backgroundColor: '#996568' }}
+            className="w-20 bg-[#4C5F2A] hover:bg-[#5a6f33] text-[#EFEFEF]"
             disabled={isLoading}
           >
             {isLoading ? 'Logging in...' : 'Login'}
@@ -162,15 +159,14 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
 
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center text-sm text-gray-600 space-y-2"
+        className="flex flex-col items-center text-sm space-y-2"
       >
-        <div>
+        <div className="text-[#B0B0B0]">
           Don&apos;t have an account?{' '}
           <button
             type="button"
             onClick={switchToSignin}
-            className="font-medium hover:underline"
-            style={{ color: '#996568' }}
+            className="font-medium hover:underline text-[#C49E5C]"
             disabled={isLoading}
           >
             Sign up
@@ -178,8 +174,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
         </div>
         <Link 
           href="/forgot-password" 
-          className="font-medium hover:underline" 
-          style={{ color: '#996568' }}
+          className="font-medium hover:underline text-[#C49E5C]" 
         >
           Forgot password?
         </Link>

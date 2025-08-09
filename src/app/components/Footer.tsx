@@ -35,7 +35,7 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true, margin: "-50px" }}
-      className="bg-[#5a3e36] text-[#ffd49e] pt-16 pb-8 px-4 sm:px-6 lg:px-8"
+      className="bg-[#0C0C0C] text-[#EFEFEF] pt-16 pb-8 px-4 sm:px-6 lg:px-8 border-t border-[#1A1A1A]"
     >
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -46,8 +46,8 @@ const Footer = () => {
             transition={{ delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <h3 className="text-2xl font-serif font-bold mb-4">Mind & Meaning</h3>
-            <p className="text-[#f8b878] mb-6">
+            <h3 className="text-2xl font-serif font-bold mb-4 text-[#C49E5C]">Mind & Meaning</h3>
+            <p className="text-[#EFEFEF] opacity-80 mb-6">
               Exploring the depths of human consciousness and timeless wisdom.
             </p>
             <div className="flex space-x-4">
@@ -56,7 +56,7 @@ const Footer = () => {
                   key={index}
                   href={social.href}
                   whileHover={{ y: -3, scale: 1.1 }}
-                  className="text-[#f8b878] hover:text-white text-xl transition-colors"
+                  className="text-[#8C1C13] hover:text-[#C49E5C] text-xl transition-colors"
                 >
                   {social.icon}
                 </motion.a>
@@ -73,7 +73,7 @@ const Footer = () => {
               transition={{ delay: 0.3 + index * 0.1 }}
               viewport={{ once: true }}
             >
-              <h4 className="text-lg font-medium mb-4 border-b border-[#996568] pb-2">
+              <h4 className="text-lg font-medium mb-4 border-b border-[#4C5F2A] pb-2 text-[#C49E5C]">
                 {section.title}
               </h4>
               <ul className="space-y-3">
@@ -85,7 +85,7 @@ const Footer = () => {
                     transition={{ delay: 0.4 + linkIndex * 0.05 }}
                     viewport={{ once: true }}
                   >
-                    <Link href={link.href} className="flex items-center text-[#f8b878] hover:text-white transition-colors">
+                    <Link href={link.href} className="flex items-center text-[#EFEFEF] hover:text-[#C49E5C] transition-colors opacity-80 hover:opacity-100">
                       <span className="mr-2">{link.icon}</span>
                       {link.name}
                     </Link>
@@ -102,7 +102,7 @@ const Footer = () => {
           whileInView={{ scaleX: 1 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="border-t border-[#996568] my-8 w-full"
+          className="border-t border-[#4C5F2A] my-8 w-full"
         />
 
         {/* Bottom Section */}
@@ -112,7 +112,7 @@ const Footer = () => {
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
             viewport={{ once: true }}
-            className="text-[#f8b878] text-sm mb-4 md:mb-0"
+            className="text-[#EFEFEF] text-sm mb-4 md:mb-0 opacity-70"
           >
             © {new Date().getFullYear()} Mind & Meaning. All rights reserved.
           </motion.p>
@@ -124,10 +124,10 @@ const Footer = () => {
             viewport={{ once: true }}
             className="flex space-x-6"
           >
-            <Link href="/privacy" className="text-[#f8b878] hover:text-white text-sm transition-colors">
+            <Link href="/privacy" className="text-[#EFEFEF] hover:text-[#C49E5C] text-sm transition-colors opacity-70 hover:opacity-100">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-[#f8b878] hover:text-white text-sm transition-colors">
+            <Link href="/terms" className="text-[#EFEFEF] hover:text-[#C49E5C] text-sm transition-colors opacity-70 hover:opacity-100">
               Terms of Service
             </Link>
           </motion.div>

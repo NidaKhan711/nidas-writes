@@ -6,19 +6,18 @@ import Mind from "../assets/Images/Mind.png"
 import Image from "next/image";
 import Laptop from "../assets/Images/laptop.jpg"
 
-
 const Blog = () => {
     return (
-        <div className="min-h-screen p-15 z-60 bg-[#fffcf1] ">
+        <div className="min-h-screen p-15 z-60 bg-[#0C0C0C] ">
             {/* Categories Header */}
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true, margin: "-100px" }}
-                className="mb-10 bg-[#fffcf1]"
+                className="mb-10 bg-[#0C0C0C]"
             >
-                <h1 className="text-3xl font-extrabold mb-4 text-[#341601] flex justify-center items-center">
+                <h1 className="text-3xl font-extrabold mb-4 text-[#C49E5C] flex justify-center items-center">
                     Explore Our Categories
                 </h1>
                 <motion.div 
@@ -26,29 +25,29 @@ const Blog = () => {
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true, margin: "-100px" }}
-                    className="flex flex-wrap gap-3 mt-9"
+                    className="flex flex-wrap gap-3 mt-9 justify-center"
                 >
                     <motion.span 
                         whileHover={{ scale: 1.05 }}
-                        className="bg-[#FCECD8] px-5 py-2 rounded-full text-sm font-semibold text-[#341601] border border-[#ffd8bc] hover:bg-[#F2E0C4] transition duration-300 cursor-pointer"
+                        className="bg-[#4C5F2A] px-5 py-2 rounded-full text-sm font-semibold text-[#EFEFEF] border border-[#5a6f33] hover:bg-[#5a6f33] transition duration-300 cursor-pointer"
                     >
                         #Tech
                     </motion.span>
                     <motion.span 
                         whileHover={{ scale: 1.05 }}
-                        className="bg-[#FCECD8] px-5 py-2 rounded-full text-sm font-semibold text-[#341601] border border-[#ffd8bc] hover:bg-[#F2E0C4] transition duration-300 cursor-pointer"
+                        className="bg-[#8C1C13] px-5 py-2 rounded-full text-sm font-semibold text-[#EFEFEF] border border-[#a02217] hover:bg-[#a02217] transition duration-300 cursor-pointer"
                     >
                         #Self-growth
                     </motion.span>
                     <motion.span 
                         whileHover={{ scale: 1.05 }}
-                        className="bg-[#FCECD8] px-5 py-2 rounded-full text-sm font-semibold text-[#341601] border border-[#ffd8bc] hover:bg-[#F2E0C4] transition duration-300 cursor-pointer"
+                        className="bg-[#4C5F2A] px-5 py-2 rounded-full text-sm font-semibold text-[#EFEFEF] border border-[#5a6f33] hover:bg-[#5a6f33] transition duration-300 cursor-pointer"
                     >
                         #Philosophy
                     </motion.span>
                     <motion.span 
                         whileHover={{ scale: 1.05 }}
-                        className="bg-[#FCECD8] px-5 py-2 rounded-full text-sm font-semibold text-[#341601] border border-[#ffd8bc] hover:bg-[#F2E0C4] transition duration-300 cursor-pointer"
+                        className="bg-[#8C1C13] px-5 py-2 rounded-full text-sm font-semibold text-[#EFEFEF] border border-[#a02217] hover:bg-[#a02217] transition duration-300 cursor-pointer"
                     >
                         #Creativity
                     </motion.span>
@@ -63,24 +62,24 @@ const Blog = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                     viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group"
+                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-[#1A1A1A]"
                 >
                     <motion.div 
                         whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
+                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-800"
                     >
                         <Image
                             src={Laptop}
                             alt="laptop"
-                            className="rounded-lg w-full h-full"
+                            className="rounded-lg w-full h-full object-cover"
                             width={300}
                             height={100}
                         />
                     </motion.div>
                     <div className="p-6">
                         <motion.h2 
-                            whileHover={{ color: "#5C2B0A" }}
-                            className="text-xl font-bold mb-3 text-[#341601] transition-colors duration-300"
+                            whileHover={{ color: "#D9B56E" }}
+                            className="text-xl font-bold mb-3 text-[#C49E5C] transition-colors duration-300"
                         >
                             Exploring the Dynamic World of Web Development
                         </motion.h2>
@@ -89,12 +88,12 @@ const Blog = () => {
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             viewport={{ once: true }}
-                            className="text-[#341601] text-sm mb-5 leading-relaxed opacity-80"
+                            className="text-[#EFEFEF] text-sm mb-5 leading-relaxed opacity-80"
                         >
                             Join me on a journey through the ever-evolving landscape of web
                             development, from front-end frameworks to back-end architectures...
                         </motion.p>
-                        <div className="flex justify-between items-center text-[#341601] text-xs opacity-70">
+                        <div className="flex justify-between items-center text-[#EFEFEF] text-xs opacity-70">
                             <motion.span
                                 whileInView={{ opacity: 1 }}
                                 initial={{ opacity: 0 }}
@@ -111,7 +110,7 @@ const Blog = () => {
                                     initial={{ opacity: 0 }}
                                     transition={{ duration: 0.6, delay: 0.3 }}
                                     viewport={{ once: true }}
-                                    className="text-[#341601] hover:text-[#5C2B0A] font-semibold flex items-center"
+                                    className="text-[#4C5F2A] hover:text-[#5a6f33] font-semibold flex items-center"
                                 >
                                     Read More
                                     <svg
@@ -140,24 +139,24 @@ const Blog = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                     viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group"
+                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-[#1A1A1A]"
                 >
                     <motion.div 
                         whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
+                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-800"
                     >
                         <Image
                             src={Mind}
                             alt="mind"
-                            className="rounded-lg w-full h-full"
+                            className="rounded-lg w-full h-full object-cover"
                             width={300}
                             height={100}
                         />
                     </motion.div>
                     <div className="p-6">
                         <motion.h2 
-                            whileHover={{ color: "#5C2B0A" }}
-                            className="text-xl font-bold mb-3 text-[#341601] transition-colors duration-300"
+                            whileHover={{ color: "#D9B56E" }}
+                            className="text-xl font-bold mb-3 text-[#C49E5C] transition-colors duration-300"
                         >
                             The Art of Mindful Productivity: Finding Your Flow
                         </motion.h2>
@@ -166,12 +165,12 @@ const Blog = () => {
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             viewport={{ once: true }}
-                            className="text-[#341601] text-sm mb-5 leading-relaxed opacity-80"
+                            className="text-[#EFEFEF] text-sm mb-5 leading-relaxed opacity-80"
                         >
                             Discover powerful strategies for enhancing productivity while
                             maintaining a deep sense of balance and mindfulness in your daily life...
                         </motion.p>
-                        <div className="flex justify-between items-center text-[#341601] text-xs opacity-70">
+                        <div className="flex justify-between items-center text-[#EFEFEF] text-xs opacity-70">
                             <motion.span
                                 whileInView={{ opacity: 1 }}
                                 initial={{ opacity: 0 }}
@@ -188,7 +187,7 @@ const Blog = () => {
                                     initial={{ opacity: 0 }}
                                     transition={{ duration: 0.6, delay: 0.3 }}
                                     viewport={{ once: true }}
-                                    className="text-[#341601] hover:text-[#5C2B0A] font-semibold flex items-center"
+                                    className="text-[#8C1C13] hover:text-[#a02217] font-semibold flex items-center"
                                 >
                                     Read More
                                     <svg
@@ -217,24 +216,24 @@ const Blog = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group"
+                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-[#1A1A1A]"
                 >
                     <motion.div 
                         whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
+                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-800"
                     >
                         <Image
                             src={Book}
                             alt="Book"
-                            className="rounded-lg w-full h-full"
+                            className="rounded-lg w-full h-full object-cover"
                             width={300}
                             height={100}
                         />
                     </motion.div>
                     <div className="p-6">
                         <motion.h2 
-                            whileHover={{ color: "#5C2B0A" }}
-                            className="text-xl font-bold mb-3 text-[#341601] transition-colors duration-300"
+                            whileHover={{ color: "#D9B56E" }}
+                            className="text-xl font-bold mb-3 text-[#C49E5C] transition-colors duration-300"
                         >
                             Reflections on Existential Philosophy: Deeper Meanings
                         </motion.h2>
@@ -243,12 +242,12 @@ const Blog = () => {
                             initial={{ opacity: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
                             viewport={{ once: true }}
-                            className="text-[#341601] text-sm mb-5 leading-relaxed opacity-80"
+                            className="text-[#EFEFEF] text-sm mb-5 leading-relaxed opacity-80"
                         >
                             Delve into the depths of existential philosophy, confronting the
                             fundamental questions of existence, freedom, and responsibility...
                         </motion.p>
-                        <div className="flex justify-between items-center text-[#341601] text-xs opacity-70">
+                        <div className="flex justify-between items-center text-[#EFEFEF] text-xs opacity-70">
                             <motion.span
                                 whileInView={{ opacity: 1 }}
                                 initial={{ opacity: 0 }}
@@ -265,7 +264,7 @@ const Blog = () => {
                                     initial={{ opacity: 0 }}
                                     transition={{ duration: 0.6, delay: 0.3 }}
                                     viewport={{ once: true }}
-                                    className="text-[#341601] hover:text-[#5C2B0A] font-semibold flex items-center"
+                                    className="text-[#4C5F2A] hover:text-[#5a6f33] font-semibold flex items-center"
                                 >
                                     Read More
                                     <svg

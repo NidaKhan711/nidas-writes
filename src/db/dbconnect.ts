@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/auth-demo";
+const MONGO_URI = process.env.MONGO_URI as string;
 
 if (!MONGO_URI) throw new Error("Please add MONGO_URI to .env");
 

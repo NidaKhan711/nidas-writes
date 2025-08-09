@@ -86,20 +86,20 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
     >
       {error && (
         <motion.div variants={itemVariants}>
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="bg-[#2A1A1A] border-[#8C1C13]">
             <Terminal className="h-4 w-4" />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+            <AlertTitle className="text-[#EFEFEF]">Error</AlertTitle>
+            <AlertDescription className="text-[#B0B0B0]">{error}</AlertDescription>
           </Alert>
         </motion.div>
       )}
 
       {success && (
         <motion.div variants={itemVariants}>
-          <Alert>
-            <Terminal className="h-4 w-4" />
-            <AlertTitle>Success</AlertTitle>
-            <AlertDescription>{success}</AlertDescription>
+          <Alert className="bg-[#1A2A1A] border-[#4C5F2A]">
+            <Terminal className="h-4 w-4 text-[#C49E5C]" />
+            <AlertTitle className="text-[#EFEFEF]">Success</AlertTitle>
+            <AlertDescription className="text-[#B0B0B0]">{success}</AlertDescription>
           </Alert>
         </motion.div>
       )}
@@ -110,7 +110,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
         onSubmit={handleSubmit}
       >
         <motion.div variants={itemVariants}>
-          <label htmlFor="name" className="block text-sm font-medium text-[#3A1700]">
+          <label htmlFor="name" className="block text-sm font-medium text-[#EFEFEF]">
             Name
           </label>
           <Input
@@ -118,14 +118,14 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1"
+            className="mt-1 bg-[#1A1A1A] border-[#2A2A2A] text-[#EFEFEF] focus:border-[#C49E5C]"
             disabled={isLoading}
             required
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label htmlFor="email" className="block text-sm font-medium text-[#3A1700]">
+          <label htmlFor="email" className="block text-sm font-medium text-[#EFEFEF]">
             Email
           </label>
           <Input
@@ -133,14 +133,14 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1"
+            className="mt-1 bg-[#1A1A1A] border-[#2A2A2A] text-[#EFEFEF] focus:border-[#C49E5C]"
             disabled={isLoading}
             required
           />
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <label htmlFor="password" className="block text-sm font-medium text-[#3A1700]">
+          <label htmlFor="password" className="block text-sm font-medium text-[#EFEFEF]">
             Password
           </label>
           <Input
@@ -148,7 +148,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1"
+            className="mt-1 bg-[#1A1A1A] border-[#2A2A2A] text-[#EFEFEF] focus:border-[#C49E5C]"
             disabled={isLoading}
             required
             minLength={6}
@@ -158,8 +158,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
         <motion.div variants={itemVariants}>
           <Button
             type="submit"
-            className="w-20"
-            style={{ backgroundColor: '#996568' }}
+            className="w-20 bg-[#4C5F2A] hover:bg-[#5a6f33] text-[#EFEFEF]"
             disabled={isLoading}
           >
             {isLoading ? 'Signing up...' : 'Sign up'}
@@ -169,14 +168,13 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
 
       <motion.div
         variants={itemVariants}
-        className="text-center text-sm text-gray-600"
+        className="text-center text-sm text-[#B0B0B0]"
       >
         Already have an account?{' '}
         <button
           type="button"
           onClick={switchToLogin}
-          className="font-medium hover:underline"
-          style={{ color: '#996568' }}
+          className="font-medium hover:underline text-[#C49E5C]"
           disabled={isLoading}
         >
           Login
