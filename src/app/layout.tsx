@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navbar from '../app/components/Navbar'
+import React from 'react';
+import Footer from "../app/components/Footer";
 
 export const metadata: Metadata = {
   title: "Nida's Writes",
@@ -52,7 +55,9 @@ export default function RootLayout({
         </style>
       </head>
       <body className="antialiased">
+         <Navbar/>
         {children}
+        <Footer/>
       </body>
     </html>
   );

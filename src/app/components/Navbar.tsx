@@ -29,7 +29,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Signin from './Signin';
 import Login from './Login';
 
-
 interface AuthData {
   name: string;
   email?: string;
@@ -43,7 +42,7 @@ interface User extends AuthData {
 const NAV_ITEMS = [
   { name: 'Home', path: '/' },
   { name: 'About', path: '/about' },
-  { name: 'Blogs', path: '/blogs' },
+  { name: 'Blogs', path: '/blog' },
   { name: 'Contact', path: '/contact' },
 ];
 
@@ -138,31 +137,27 @@ export default function Navbar() {
   };
 
   if (isLoading) {
-    return <div className="h-16 bg-[#0C0C0C]"></div>;
+    return <div className="h-16 bg-[#fffcf1]"></div>;
   }
 
+  const logoutButton = async () => {
+    try {
+      const res = await fetch('/api/auth/user/logout', {
+        method: 'POST',
+      });
 
-const logoutButton = async () => {
-  try {
-    const res = await fetch('/api/auth/user/logout', {
-      method: 'POST',
-    });
+      if (!res.ok) {
+        throw new Error('Failed to logout');
+      }
 
-    if (!res.ok) {
-      throw new Error('Failed to logout');
+      const data = await res.json();
+      console.log(data.message);
+      handleLogout();
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('Logout failed. Please try again.');
     }
-
-    // Optional: read server response
-    const data = await res.json();
-    console.log(data.message);
-
-    handleLogout(); // e.g., redirect or clear state
-  } catch (error) {
-    console.error('Logout failed:', error);
-    alert('Logout failed. Please try again.');
-  }
-};
-
+  };
 
   return (
     <>
@@ -170,7 +165,7 @@ const logoutButton = async () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-[#0C0C0C] w-full fixed top-0 z-20 shadow-sm border-b border-[#1A1A1A]"
+        className="bg-[#fffcf1] w-full fixed top-0 z-20 shadow-sm border-b border-[#e8c9a7]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
@@ -178,7 +173,7 @@ const logoutButton = async () => {
               whileHover={{ scale: 1.05 }}
               className="flex-shrink-0 flex items-center"
             >
-              <Link href="/" className="text-2xl font-bold text-[#C49E5C]">
+              <Link href="/" className="text-2xl font-bold text-[#5a3e36]">
                 Nida&apos;s Writes
               </Link>
             </motion.div>
@@ -194,7 +189,7 @@ const logoutButton = async () => {
                   <motion.div key={item.name} variants={ANIMATION_VARIANTS.item}>
                     <Link
                       href={item.path}
-                      className="text-[#EFEFEF] hover:text-[#C49E5C] px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
+                      className="text-[#5a3e36] hover:text-[#996568] px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
                     >
                       {item.name}
                     </Link>
@@ -206,29 +201,29 @@ const logoutButton = async () => {
                 <motion.div variants={ANIMATION_VARIANTS.item}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-[#1A1A1A]">
+                      <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-[#f3e9d7]">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
-                          <AvatarFallback className="bg-[#4C5F2A] text-[#EFEFEF]">
+                          <AvatarFallback className="bg-[#996568] text-white">
                             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                           </AvatarFallback>
                         </Avatar>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-56 bg-[#1A1A1A] border border-[#2A2A2A]" align="end" forceMount>
-                      <DropdownMenuItem asChild className="hover:bg-[#2A2A2A] text-[#EFEFEF]">
+                    <DropdownMenuContent className="w-56 bg-white border border-[#e8c9a7]" align="end" forceMount>
+                      <DropdownMenuItem asChild className="hover:bg-[#f3e9d7] text-[#5a3e36]">
                         <Link href="/profile" className="w-full">
                           Profile
                         </Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="hover:bg-[#2A2A2A] text-[#EFEFEF]">
+                      <DropdownMenuItem asChild className="hover:bg-[#f3e9d7] text-[#5a3e36]">
                         <Link href="/settings" className="w-full">
                           Settings
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => setLogoutDialogOpen(true)}
-                        className="text-[#8C1C13] hover:bg-[#2A2A2A] focus:text-[#8C1C13]"
+                        className="text-[#996568] hover:bg-[#f3e9d7] focus:text-[#996568]"
                       >
                         Logout
                       </DropdownMenuItem>
@@ -240,7 +235,7 @@ const logoutButton = async () => {
                   <Button
                     variant="outline"
                     onClick={openAuthDialog}
-                    className="bg-[#4C5F2A] text-[#EFEFEF] px-6 py-2 rounded-md border-2 border-[#5a6f33] text-base font-medium hover:bg-[#5a6f33] transition-colors duration-300 shadow"
+                    className="bg-[#996568] text-white px-6 py-2 rounded-md border-2 border-[#b87a7d] text-base font-medium hover:bg-[#b87a7d] transition-colors duration-300 shadow"
                   >
                     Sign In
                   </Button>
@@ -251,7 +246,7 @@ const logoutButton = async () => {
             <div className="md:hidden flex items-center">
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center justify-center p-2 rounded-md text-[#EFEFEF] hover:text-[#C49E5C] focus:outline-none"
+                className="inline-flex items-center justify-center p-2 rounded-md text-[#5a3e36] hover:text-[#996568] focus:outline-none"
                 aria-expanded={isOpen}
                 aria-label="Toggle menu"
               >
@@ -298,7 +293,7 @@ const logoutButton = async () => {
           transition={{ duration: 0.3 }}
           className="md:hidden overflow-hidden"
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-[#1A1A1A] shadow-lg border-t border-[#2A2A2A]">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg border-t border-[#e8c9a7]">
             {NAV_ITEMS.map((item) => (
               <motion.div 
                 key={item.name}
@@ -307,7 +302,7 @@ const logoutButton = async () => {
               >
                 <Link
                   href={item.path}
-                  className="block px-3 py-2 text-base font-medium text-[#EFEFEF] hover:text-[#C49E5C] hover:bg-[#2A2A2A] rounded-md"
+                  className="block px-3 py-2 text-base font-medium text-[#5a3e36] hover:text-[#996568] hover:bg-[#f3e9d7] rounded-md"
                   onClick={() => setIsOpen(false)}
                 >
                   {item.name}
@@ -323,15 +318,15 @@ const logoutButton = async () => {
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
-                  <AvatarFallback className="bg-[#4C5F2A] text-[#EFEFEF]">
+                  <AvatarFallback className="bg-[#996568] text-white">
                     {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                   </AvatarFallback>
                 </Avatar>
-                <span className="text-[#EFEFEF] flex-grow">{user?.name}</span>
+                <span className="text-[#5a3e36] flex-grow">{user?.name}</span>
                 <Button 
                   variant="ghost" 
                   onClick={() => setLogoutDialogOpen(true)}
-                  className="text-[#8C1C13] hover:bg-[#2A2A2A]"
+                  className="text-[#996568] hover:bg-[#f3e9d7]"
                 >
                   Logout
                 </Button>
@@ -344,7 +339,7 @@ const logoutButton = async () => {
                 <Button
                   variant="outline"
                   onClick={openAuthDialog}
-                  className="w-full px-3 py-2 rounded-md text-base font-medium text-[#EFEFEF] bg-[#4C5F2A] hover:bg-[#5a6f33] border border-[#5a6f33]"
+                  className="w-full px-3 py-2 rounded-md text-base font-medium text-white bg-[#996568] hover:bg-[#b87a7d] border border-[#b87a7d]"
                 >
                   Sign In
                 </Button>
@@ -355,9 +350,9 @@ const logoutButton = async () => {
       </motion.nav>
 
       <Dialog open={authDialogOpen} onOpenChange={setAuthDialogOpen}>
-        <DialogContent className="sm:max-w-[425px] bg-[#1A1A1A] border border-[#2A2A2A]">
+        <DialogContent className="sm:max-w-[425px] bg-white border border-[#e8c9a7]">
           <DialogHeader>
-            <DialogTitle className="text-center text-[#C49E5C]">
+            <DialogTitle className="text-center text-[#5a3e36]">
               {showLogin ? 'Login' : 'Create Account'}
             </DialogTitle>
           </DialogHeader>
@@ -376,20 +371,20 @@ const logoutButton = async () => {
       </Dialog>
 
       <AlertDialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <AlertDialogContent className="bg-[#1A1A1A] border border-[#2A2A2A]">
+        <AlertDialogContent className="bg-white border border-[#e8c9a7]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-[#EFEFEF]">Confirm Logout</AlertDialogTitle>
-            <AlertDialogDescription className="text-[#B0B0B0]">
+            <AlertDialogTitle className="text-[#5a3e36]">Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription className="text-[#5a3e36]/80">
               You&apos;ll need to sign in again to access your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-[#2A2A2A] text-[#EFEFEF] border border-[#3A3A3A] hover:bg-[#3A3A3A]">
+            <AlertDialogCancel className="bg-white text-[#5a3e36] border border-[#e8c9a7] hover:bg-[#f3e9d7]">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction 
               onClick={logoutButton}
-              className="bg-[#8C1C13] hover:bg-[#7a4f4f] text-[#EFEFEF]"
+              className="bg-[#996568] hover:bg-[#b87a7d] text-white"
             >
               Logout
             </AlertDialogAction>
