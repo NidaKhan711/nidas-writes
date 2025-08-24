@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import userModel from "@/models/userModel";
-import { connectDB } from "@/db/dbconnect";
+import userModel from "@/utils/models/userModel";
+import connectDB from "@/utils/db/dbconnect";
 
 export async function POST(req: Request) {
   try {

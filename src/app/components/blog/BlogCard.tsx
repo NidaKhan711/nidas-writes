@@ -1,6 +1,6 @@
 import React from 'react';
-import { Calendar, User, Clock, ChevronRight } from 'lucide-react';
-
+import Link from 'next/link';
+import { Calendar, User, Clock, ChevronRight} from 'lucide-react';
 interface BlogCardProps {
   post: {
     id: number;
@@ -16,7 +16,8 @@ interface BlogCardProps {
   getCategoryStyles: (color: 'green' | 'red') => string;
 }
 
-const BlogCard: React.FC<BlogCardProps> = ({ post, getCategoryStyles }) => (
+
+const BlogCard: React.FC<BlogCardProps> = ({ post, getCategoryStyles}) => (
   <div className="bg-[#fffcf1] rounded-xl overflow-hidden shadow-sm border border-[#e8c9a7] hover:border-[#996568] hover:shadow-md transition-all duration-300 cursor-pointer group">
     {/* Image */}
     <div className="relative overflow-hidden bg-[#fffcf1] h-48">
@@ -37,6 +38,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, getCategoryStyles }) => (
         </span>
       </div>
     </div>
+
     {/* Content */}
     <div className="p-6">
       <h3 className="text-xl font-bold text-[#5a3e36] mb-3 group-hover:text-[#996568] transition-colors duration-300 leading-tight">
@@ -62,10 +64,12 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, getCategoryStyles }) => (
           <Calendar className="w-4 h-4" />
           <span>{post.date}</span>
         </span>
-        <button className="flex items-center space-x-1 text-[#996568] hover:text-[#b87a7d] font-medium">
+        
+        {/* Link to blog details page */}
+        <Link href={`/blog/${post.id}`} className="flex items-center space-x-1 text-[#996568] hover:text-[#b87a7d] font-medium">
           <span>Read More</span>
           <ChevronRight className="w-4 h-4" />
-        </button>
+        </Link>
       </div>
     </div>
   </div>

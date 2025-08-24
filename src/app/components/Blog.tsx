@@ -1,10 +1,10 @@
 "use client"
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Book from "../assets/Images/book.jpg"
-import Mind from "../assets/Images/Mind.png"
+import Book from "@/../public/assets/Images/book.jpg";
+import Mind from "@/../public/assets/Images/Mind.png";
 import Image from "next/image";
-import Laptop from "../assets/Images/laptop.jpg"
+import Laptop from "@/../public/assets/Images/laptop.jpg";
 
 const Blog = () => {
     return (

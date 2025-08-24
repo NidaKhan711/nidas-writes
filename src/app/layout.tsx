@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from '../app/components/Navbar'
-import React from 'react';
-import Footer from "../app/components/Footer";
+import React from "react";
+import ClientWrapper from "./ClientWrapper"; 
 
 export const metadata: Metadata = {
   title: "Nida's Writes",
@@ -11,13 +10,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <head>
-        {/* Preload local fonts */}
+        {/* Fonts preload */}
         <link
           rel="preload"
           href="/fonts/libre-baskerville-italic.woff2"
@@ -32,8 +31,6 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        
-        {/* Define font faces */}
         <style>
           {`
             @font-face {
@@ -43,7 +40,6 @@ export default function RootLayout({
               font-display: swap;
               src: url('/fonts/libre-baskerville-italic.woff2') format('woff2');
             }
-            
             @font-face {
               font-family: 'Geist Mono';
               font-style: normal;
@@ -55,9 +51,8 @@ export default function RootLayout({
         </style>
       </head>
       <body className="antialiased">
-         <Navbar/>
-        {children}
-        <Footer/>
+        {/* 👇 ab sab kuch ClientWrapper handle karega */}
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );

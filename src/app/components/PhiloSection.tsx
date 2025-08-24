@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import Philso from "../assets/Images/philo.jpg";
+import Philso from "@/../public/assets/Images/philo.jpg";
 
 const PhiloSection: React.FC = () => {
   const ref = useRef<HTMLDivElement>(null);

@@ -3,8 +3,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-import buk from '../assets/Images/buk.jpg'
-import say from '../assets/Images/say.jpg'
+import buk from '@/../public/assets/Images/buk.jpg';
+import say from '@/../public/assets/Images/say.jpg';
 
 const  Learning = () => {
   return (
