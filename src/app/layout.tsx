@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import React from "react";
 import ClientWrapper from "./ClientWrapper"; 
+ import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const metadata: Metadata = {
   title: "Nida's Writes",
@@ -51,6 +53,7 @@ export default function RootLayout({
         </style>
       </head>
       <body className="antialiased">
+        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light"/>
         {/* 👇 ab sab kuch ClientWrapper handle karega */}
         <ClientWrapper>{children}</ClientWrapper>
       </body>

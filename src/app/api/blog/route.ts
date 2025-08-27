@@ -2,34 +2,32 @@ import { NextResponse } from "next/server";
 import blogModel from "@/utils/models/blogModel";
 import connectDB from "@/utils/db/dbconnect";
 import { writeFile } from "fs/promises";
-
+const fs = require("fs");
 
 export async function GET(request: Request) {
   try {
     await connectDB();
-    
+
     // Extract id from the URL
     const url = new URL(request.url);
     const blogId = url.searchParams.get("id");
-    
+
     if (blogId) {
       const blog = await blogModel.findById(blogId);
-      
+
       if (!blog) {
-        return NextResponse.json(
-          { error: "Blog not found" },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Blog not found" }, { status: 404 });
       }
-      
+
       return NextResponse.json({
         id: blog._id,
         title: blog.title,
         description: blog.content || blog.description,
-        author: blog.author,
+        authorName: blog.authorName,
         category: blog.category,
         categoryColor: blog.categoryColor || "gray",
-        image: blog.image
+        image: blog.image,
+        authorImage: blog.authorImage,
       });
     } else {
       const blogs = await blogModel.find({});
@@ -53,8 +51,9 @@ export async function POST(req: Request) {
     const title = formData.get("title") as string;
     const slug = formData.get("slug") as string;
     const description = formData.get("description") as string;
-    const authorName = (formData.get("authorName") as string) || "Admin";
+    const authorName = (formData.get("authorName") as string) ;
     const category = (formData.get("category") as string) || "General";
+    const authorImageFile = formData.get("authorImage") as File | null;
 
     // image
     const image = formData.get("image") as File | null;
@@ -68,6 +67,16 @@ export async function POST(req: Request) {
       imageUrl = `/assets/images/${timestamp}_${image.name}`;
     }
 
+    // save author image
+    let authorImageUrl = "";
+    if (authorImageFile) {
+      const bytes = await authorImageFile.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const path = `./public/assets/images/${timestamp}_${authorImageFile.name}`;
+      await writeFile(path, buffer);
+      authorImageUrl = `/assets/images/${timestamp}_${authorImageFile.name}`;
+    }
+
     const newBlog = await blogModel.create({
       title,
       slug,
@@ -75,10 +84,26 @@ export async function POST(req: Request) {
       authorName,
       category,
       image: imageUrl,
+      authorImage: authorImageUrl,
     });
 
     return NextResponse.json({ success: true, blog: newBlog }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: error.message },
+      { status: 500 }
+    );
   }
+}
+//create api to delete blogs for adminpenel bloglist
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get("id");
+  const blog = await blogModel.findById(id);
+  if (blog && blog.image) {
+    await fs.promises.unlink(`./public/${blog.image}`);
+    await fs.promises.unlink(`./public/${blog.authorImage}`);
+  }
+  await blogModel.findByIdAndDelete(id);
+  return NextResponse.json({ message: "Blog deleted successfully" });
 }

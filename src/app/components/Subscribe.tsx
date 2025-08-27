@@ -1,24 +1,44 @@
 "use client";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiSend } from 'react-icons/fi';
+import { FiSend, FiCheck } from 'react-icons/fi';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Subscribe = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubscribed(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      const response = await axios.post('/api/email', formData);
+      
+      if (response.data.success) {
+        toast.success('Subscribed successfully!');
+        setEmail('');
+        setIsSubscribed(true);
+      } else if (response.data.message === 'Email already exists') {
+        toast.info('This email is already subscribed!');
+        setIsSubscribed(true);
+      } else {
+        toast.error('Subscription failed. Please try again.');
+      }
+    } catch (error: any) {
+      if (error.response?.data?.message === 'Email already exists') {
+        toast.info('This email is already subscribed!');
+        setIsSubscribed(true);
+      } else {
+        toast.error('An error occurred. Please try again.');
+      }
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   // Animation variants
@@ -84,6 +104,7 @@ const Subscribe = () => {
                            text-[#5a3e36] placeholder-[#996568]/60
                            focus:outline-none focus:ring-2 focus:ring-[#996568]/50"
                   required
+                  disabled={isLoading}
                 />
               </motion.div>
 
@@ -125,7 +146,7 @@ const Subscribe = () => {
               transition={{ duration: 0.8 }}
             >
               <div className="w-16 h-16 bg-[#996568] rounded-full mx-auto flex items-center justify-center">
-                <FiSend className="text-2xl text-white" />
+                <FiCheck className="text-2xl text-white" />
               </div>
             </motion.div>
 

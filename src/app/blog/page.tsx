@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 
-const categories = ['All', 'Tech', 'Lifestyle', 'philosophy'];
+const categories = ['All', 'Tech', 'Lifestyle', 'Philosophy'];
 
 // Define a type for the form data
 interface BlogData {
@@ -27,7 +27,7 @@ const Blog: React.FC = () => {
 
     const response = await axios.get('/api/blog');
     setBlogs(response.data.blogs);
-    console.log(response.data.blogs);
+
   }
   useEffect(() => {
     fetchBlogs();
@@ -42,7 +42,7 @@ const Blog: React.FC = () => {
   });
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-[#fffcf1] via-[#fef7e6] to-[#f9f1e4] text-[#5a3e36] py-12 px-4">
+    <section className="min-h-screen bg-gradient-to-br from-[#fffcf1] via-[#fef7e6] to-[#f9f1e4] text-[#5a3e36] py-12 px-4 mt-13">
       {/* Heading */}
       <div className="text-center mb-12">
         <motion.h1
@@ -142,8 +142,7 @@ const Blog: React.FC = () => {
                   {post.title}
                 </h3>
 
-                <p className="text-sm text-[#5a3e36]/70 mb-6 flex-grow leading-relaxed line-clamp-3">
-                  {post.description}
+                <p className="text-sm text-[#5a3e36]/70 mb-6 flex-grow leading-relaxed line-clamp-3 " dangerouslySetInnerHTML={{__html:post.description}}>
                 </p>
 
                 {/* Simple Read More Link */}

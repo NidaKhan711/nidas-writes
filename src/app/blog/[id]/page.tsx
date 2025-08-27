@@ -12,10 +12,10 @@ export default function SingleBlog({ params }: BlogPageProps) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('/api/blog', {
+      const response = await axios.get("/api/blog", {
         params: {
-          id: params.id
-        }
+          id: params.id,
+        },
       });
       setData(response.data);
     } catch (error) {
@@ -70,10 +70,17 @@ export default function SingleBlog({ params }: BlogPageProps) {
 
       {/* Post Metadata */}
       <div className="flex flex-wrap items-center gap-4 mb-6 text-gray-600">
-        <span className="flex items-center">
-          <span className="mr-2">By</span>
-          <span className="font-medium">{data.author}</span>
-        </span>
+        {/* Author Info */}
+        <div className="flex items-center gap-2">
+          <img
+            src={data.authorImage || "/default-author.png"} // fallback image
+            alt={data.authorName}
+            className="w-8 h-8 rounded-full object-cover"
+          />
+          <span className="font-medium  text-black ">{data.authorName}</span>
+        </div>
+        
+        {/* Category */}
         <span
           className={`px-3 py-1 rounded-full text-sm ${
             data.categoryColor === "green"
@@ -88,9 +95,9 @@ export default function SingleBlog({ params }: BlogPageProps) {
       </div>
 
       {/* Post Content */}
-      <div className="prose max-w-none">
-        <p className="text-lg leading-relaxed">{data.description}</p>
+      <div className="prose max-w-none blog-description" dangerouslySetInnerHTML={{ __html: data.description }}>
+        </div>
       </div>
-    </div>
+  
   );
 }
