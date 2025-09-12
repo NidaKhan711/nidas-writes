@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import blogModel from "@/utils/models/blogModel";
 import connectDB from "@/utils/db/dbconnect";
 import { writeFile } from "fs/promises";
-const fs = require("fs");
+import fs from "fs";     
 
 export async function GET(request: Request) {
   try {
@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     const title = formData.get("title") as string;
     const slug = formData.get("slug") as string;
     const description = formData.get("description") as string;
-    const authorName = (formData.get("authorName") as string) ;
+    const authorName = (formData.get("authorName") as string);
     const category = (formData.get("category") as string) || "General";
     const authorImageFile = formData.get("authorImage") as File | null;
 
@@ -88,22 +88,64 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ success: true, blog: newBlog }, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let errorMessage = "An unknown error occurred";
+    
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
     return NextResponse.json(
-      { success: false, message: error.message },
+      { success: false, message: errorMessage },
       { status: 500 }
     );
   }
 }
+
 //create api to delete blogs for adminpenel bloglist
 export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get("id");
-  const blog = await blogModel.findById(id);
-  if (blog && blog.image) {
-    await fs.promises.unlink(`./public/${blog.image}`);
-    await fs.promises.unlink(`./public/${blog.authorImage}`);
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get("id");
+    
+    if (!id) {
+      return NextResponse.json(
+        { message: "Blog ID is required" },
+        { status: 400 }
+      );
+    }
+    
+    const blog = await blogModel.findById(id);
+    
+    if (!blog) {
+      return NextResponse.json(
+        { message: "Blog not found" },
+        { status: 404 }
+      );
+    }
+    
+    if (blog.image) {
+      await fs.promises.unlink(`./public/${blog.image}`);
+    }
+    
+    if (blog.authorImage) {
+      await fs.promises.unlink(`./public/${blog.authorImage}`);
+    }
+    
+    await blogModel.findByIdAndDelete(id);
+    
+    return NextResponse.json({ message: "Blog deleted successfully" });
+  } catch (error: unknown) {
+    console.error("Error deleting blog:", error);
+    
+    let errorMessage = "Internal server error";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
+    return NextResponse.json(
+      { message: errorMessage },
+      { status: 500 }
+    );
   }
-  await blogModel.findByIdAndDelete(id);
-  return NextResponse.json({ message: "Blog deleted successfully" });
 }

@@ -2,8 +2,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiSend, FiCheck } from 'react-icons/fi';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
+
+interface EmailResponse {
+  success: boolean;
+  message: string;
+}
 
 const Subscribe = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +22,7 @@ const Subscribe = () => {
     try {
       const formData = new FormData();
       formData.append('email', email);
-      const response = await axios.post('/api/email', formData);
+      const response = await axios.post<EmailResponse>('/api/email', formData);
       
       if (response.data.success) {
         toast.success('Subscribed successfully!');
@@ -29,12 +34,17 @@ const Subscribe = () => {
       } else {
         toast.error('Subscription failed. Please try again.');
       }
-    } catch (error: any) {
-      if (error.response?.data?.message === 'Email already exists') {
-        toast.info('This email is already subscribed!');
-        setIsSubscribed(true);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<EmailResponse>;
+        if (axiosError.response?.data?.message === 'Email already exists') {
+          toast.info('This email is already subscribed!');
+          setIsSubscribed(true);
+        } else {
+          toast.error('An error occurred. Please try again.');
+        }
       } else {
-        toast.error('An error occurred. Please try again.');
+        toast.error('An unexpected error occurred. Please try again.');
       }
     } finally {
       setIsLoading(false);

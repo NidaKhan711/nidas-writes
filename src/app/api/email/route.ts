@@ -31,11 +31,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       { success: true, message: "Email saved successfully" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error saving email:", error);
     
-    // Handle duplicate key error
-    if (error.code === 11000) {
+    // Handle duplicate key error (MongoDB duplicate key error code)
+    if (typeof error === 'object' && error !== null && 'code' in error && error.code === 11000) {
       return NextResponse.json(
         { success: true, message: "Email already exists" },
         { status: 200 }
@@ -48,14 +48,50 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 }
-// for adminpenel to get all emails
-export async function GET(request: Request): Promise<NextResponse> {
-    const emails =await emailModel.find()
-    return NextResponse.json({emails})
+
+// for adminpanel to get all emails
+export async function GET(): Promise<NextResponse> {
+  try {
+    await connectDB();
+    const emails = await emailModel.find();
+    return NextResponse.json({ emails });
+  } catch (error: unknown) {
+    console.error("Error fetching emails:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
-// for adminpenel to delete an email
-export async function DELETE(request: Request) {
-  const id = new URL(request.url).searchParams.get("id");
-  await emailModel.findByIdAndDelete(id);
-  return NextResponse.json({success:true});
+
+// for adminpanel to delete an email
+export async function DELETE(request: Request): Promise<NextResponse> {
+  try {
+    await connectDB();
+    const id = new URL(request.url).searchParams.get("id");
+    
+    if (!id) {
+      return NextResponse.json(
+        { success: false, message: "Email ID is required" },
+        { status: 400 }
+      );
+    }
+    
+    const result = await emailModel.findByIdAndDelete(id);
+    
+    if (!result) {
+      return NextResponse.json(
+        { success: false, message: "Email not found" },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json({ success: true, message: "Email deleted successfully" });
+  } catch (error: unknown) {
+    console.error("Error deleting email:", error);
+    return NextResponse.json(
+      { success: false, message: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }

@@ -189,7 +189,7 @@ export default function Navbar() {
                   <motion.div key={item.name} variants={ANIMATION_VARIANTS.item}>
                     <Link
                       href={item.path}
-                      className="text-[#5a3e36] hover:text-[#996568] px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
+                      className="text-[#5a3e36] hover:text-[#946b6d] px-3 py-2 rounded-md text-base font-medium transition-colors duration-300"
                     >
                       {item.name}
                     </Link>
