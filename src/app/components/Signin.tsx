@@ -119,6 +119,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-1 bg-white border-[#e8c9a7] text-[#5a3e36] focus:border-[#996568]"
+            placeholder="Enter your name"
             disabled={isLoading}
             required
           />
@@ -134,6 +135,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="mt-1 bg-white border-[#e8c9a7] text-[#5a3e36] focus:border-[#996568]"
+            placeholder="Enter your email"
             disabled={isLoading}
             required
           />
@@ -149,6 +151,7 @@ export default function Signin({ onSigninSuccess, switchToLogin }: SigninProps) 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="mt-1 bg-white border-[#e8c9a7] text-[#5a3e36] focus:border-[#996568]"
+            placeholder="Create a password"
             disabled={isLoading}
             required
             minLength={6}

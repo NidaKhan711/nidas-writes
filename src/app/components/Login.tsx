@@ -86,12 +86,12 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="space-y-6 mt-6"
+      className="space-y-4 mt-4"
       id="Login"
     >
       {error && (
         <motion.div variants={itemVariants}>
-          <Alert variant="destructive" className="bg-[#f3e9d7] border-[#996568] rounded-md">
+          <Alert variant="destructive" className="bg-[#f3e9d7] border-[#996568]">
             <Terminal className="h-4 w-4 text-[#996568]" />
             <AlertTitle className="text-[#5a3e36] font-bold">Error</AlertTitle>
             <AlertDescription className="text-[#5a3e36]/80">{error}</AlertDescription>
@@ -101,7 +101,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
 
       {success && (
         <motion.div variants={itemVariants}>
-          <Alert className="bg-[#f3e9d7] border-[#e8c9a7] rounded-md">
+          <Alert className="bg-[#f3e9d7] border-[#e8c9a7]">
             <Terminal className="h-4 w-4 text-[#5a3e36]" />
             <AlertTitle className="text-[#5a3e36] font-bold">Success</AlertTitle>
             <AlertDescription className="text-[#5a3e36]/80">{success}</AlertDescription>
@@ -111,7 +111,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
 
       <motion.form
         variants={containerVariants}
-        className="space-y-6 font-serif"
+        className="space-y-4 font-serif"
         onSubmit={handleSubmit}
       >
         <motion.div variants={itemVariants}>
@@ -123,7 +123,8 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 bg-transparent border-b-2 border-[#d3c6b6] text-[#5a3e36] focus:outline-none focus:border-[#996568] transition-all"
+            className="mt-1 bg-white border-[#e8c9a7] text-[#5a3e36] focus:border-[#996568]"
+            placeholder="Enter your email"
             disabled={isLoading}
             required
           />
@@ -138,7 +139,8 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 bg-transparent border-b-2 border-[#d3c6b6] text-[#5a3e36] focus:outline-none focus:border-[#996568] transition-all"
+            className="mt-1 bg-white border-[#e8c9a7] text-[#5a3e36] focus:border-[#996568]"
+            placeholder="Enter your password"
             disabled={isLoading}
             required
             minLength={6}
@@ -148,12 +150,7 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
         <motion.div variants={itemVariants}>
           <Button
             type="submit"
-            className="w-full px-8 py-4 rounded-md font-bold transition-all duration-300 disabled:opacity-50"
-            style={{
-              color: '#fffcf1',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(to right, #996568, #b87a7d)'
-            }}
+            className="w-20 bg-[#996568] hover:bg-[#b87a7d] text-white"
             disabled={isLoading}
           >
             {isLoading ? 'Logging in...' : 'Login'}
@@ -163,21 +160,17 @@ export default function Login({ onLoginSuccess, switchToSignin }: LoginProps) {
 
       <motion.div
         variants={itemVariants}
-        className="flex flex-col items-center text-sm space-y-2 font-serif mt-6"
+        className="text-center text-sm text-[#5a3e36]/80"
       >
-        <div className="text-[#5a3e36]/80">
-          Don&apos;t have an account?{' '}
-          <button
-            type="button"
-            onClick={switchToSignin}
-            className="font-medium hover:underline"
-            style={{ color: '#996568' }}
-            disabled={isLoading}
-          >
-            Sign up
-          </button>
-        </div>
-        
+        Don&apos;t have an account?{' '}
+        <button
+          type="button"
+          onClick={switchToSignin}
+          className="font-medium hover:underline text-[#996568]"
+          disabled={isLoading}
+        >
+          Sign up
+        </button>
       </motion.div>
     </motion.div>
   );

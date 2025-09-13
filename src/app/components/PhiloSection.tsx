@@ -63,24 +63,25 @@ const PhiloSection: React.FC = () => {
             Philosophy
           </motion.h1>
           <motion.p
-            className="text-xl md:text-xl text-center max-w-2xl w-full mt-7 mb-10"
+            className="text-xl md:text-xl text-center max-w-2xl w-full mt-7 mb-10 leading-relaxed"
             variants={itemVariants}
           >
-            Philosophy is a way of understanding life, helping us to think deeply, ask questions,
-            and search for truth. It explores who we are, why we exist, and what the purpose of life
-            might be. Every idea and belief is born from some form of philosophy. It&apos;s not just knowledge—it&apos;s
-            a journey that connects us to our inner self.
+            Philosophy is the quiet art of observing life—of listening to the world within and around us. 
+            It teaches us to question, reflect, and seek meaning beyond the noise of everyday existence. 
+            Here, thoughts are not just ideas; they are seeds that grow into understanding, insight, 
+            and a deeper connection with ourselves. Every reflection, every question, is a step on the journey 
+            of truly knowing who we are and what life whispers to us.
           </motion.p>
 
           {/* Learn More Button */}
           <motion.div variants={itemVariants}>
             <Link
-              href="/diary"
+              href="blog"
               className="relative inline-block group bg-gradient-to-br from-[#ffd49e] to-[#f8b878] text-[#5a3e36] font-medium px-8 py-3 rounded-lg text-lg shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-[#e8c9a7] hover:border-[#e29d9d] hover:translate-y-[-2px]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
               <span className="relative z-10 flex items-center justify-center">
-                Learn More
+                Explore Philosophy
                 <motion.span
                   className="ml-2"
                   animate={{

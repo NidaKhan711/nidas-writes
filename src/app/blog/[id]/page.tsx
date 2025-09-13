@@ -60,5 +60,9 @@ export default async function SingleBlogPage({ params }: BlogPageProps) {
     console.error("Error fetching blog data");
   }
 
-  return <BlogContent initialData={blogData} id={id} />;
+  return<>
+  <div className="mt-14">
+   <BlogContent initialData={blogData} id={id} />;
+   </div>
+   </>
 }

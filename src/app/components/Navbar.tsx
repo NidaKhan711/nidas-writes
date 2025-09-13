@@ -23,6 +23,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -69,13 +71,13 @@ const ANIMATION_VARIANTS = {
 };
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [showLogin, setShowLogin] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
-  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const [authDialogOpen, setAuthDialogOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState<boolean>(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const checkAuth = () => {
@@ -101,11 +103,11 @@ export default function Navbar() {
     checkAuth();
   }, []);
 
-  const generateId = () => {
+  const generateId = (): string => {
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   };
 
-  const handleAuthSuccess = (userData: AuthData) => {
+  const handleAuthSuccess = (userData: AuthData): void => {
     const userWithDefaults: User = {
       id: generateId(),
       name: userData.name,
@@ -120,27 +122,23 @@ export default function Navbar() {
     setIsOpen(false);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     setUser(null);
     setIsLoggedIn(false);
     localStorage.removeItem('user');
     setLogoutDialogOpen(false);
   };
 
-  const openAuthDialog = () => {
+  const openAuthDialog = (): void => {
     setAuthDialogOpen(true);
     setIsOpen(false);
   };
 
-  const switchAuthMode = () => {
+  const switchAuthMode = (): void => {
     setShowLogin(prev => !prev);
   };
 
-  if (isLoading) {
-    return <div className="h-16 bg-[#fffcf1]"></div>;
-  }
-
-  const logoutButton = async () => {
+  const logoutButton = async (): Promise<void> => {
     try {
       const res = await fetch('/api/auth/user/logout', {
         method: 'POST',
@@ -159,6 +157,10 @@ export default function Navbar() {
     }
   };
 
+  if (isLoading) {
+    return <div className="h-16 bg-[#fffcf1]"></div>;
+  }
+
   return (
     <>
       <motion.nav
@@ -174,7 +176,7 @@ export default function Navbar() {
               className="flex-shrink-0 flex items-center"
             >
               <Link href="/" className="text-2xl font-bold text-[#5a3e36]">
-                Nida&apos;s Writes
+              Mindora
               </Link>
             </motion.div>
 
@@ -201,26 +203,24 @@ export default function Navbar() {
                 <motion.div variants={ANIMATION_VARIANTS.item}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-[#f3e9d7]">
+                      <div className="flex items-center space-x-2 cursor-pointer p-2 rounded-md hover:bg-[#f3e9d7] transition-colors duration-300">
                         <Avatar className="h-10 w-10">
                           <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
                           <AvatarFallback className="bg-[#996568] text-white">
                             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
                           </AvatarFallback>
                         </Avatar>
-                      </Button>
+                        <span className="text-[#5a3e36] font-medium">{user?.name}</span>
+                      </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-56 bg-white border border-[#e8c9a7]" align="end" forceMount>
-                      <DropdownMenuItem asChild className="hover:bg-[#f3e9d7] text-[#5a3e36]">
-                        <Link href="/profile" className="w-full">
-                          Profile
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="hover:bg-[#f3e9d7] text-[#5a3e36]">
-                        <Link href="/settings" className="w-full">
-                          Settings
-                        </Link>
-                      </DropdownMenuItem>
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium text-[#5a3e36]">{user?.name}</p>
+                          <p className="text-xs text-[#5a3e36]/70">{user?.email}</p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-[#e8c9a7]" />
                       <DropdownMenuItem 
                         onClick={() => setLogoutDialogOpen(true)}
                         className="text-[#996568] hover:bg-[#f3e9d7] focus:text-[#996568]"
@@ -314,19 +314,24 @@ export default function Navbar() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex items-center px-3 py-2 space-x-3"
+                className="flex flex-col px-3 py-2 space-y-3"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
-                  <AvatarFallback className="bg-[#996568] text-white">
-                    {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="text-[#5a3e36] flex-grow">{user?.name}</span>
+                <div className="flex items-center space-x-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user?.avatar} alt={user?.name || 'User'} />
+                    <AvatarFallback className="bg-[#996568] text-white">
+                      {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-[#5a3e36] font-medium">{user?.name}</span>
+                    <span className="text-xs text-[#5a3e36]/70">{user?.email}</span>
+                  </div>
+                </div>
                 <Button 
                   variant="ghost" 
                   onClick={() => setLogoutDialogOpen(true)}
-                  className="text-[#996568] hover:bg-[#f3e9d7]"
+                  className="text-[#996568] hover:bg-[#f3e9d7] justify-start"
                 >
                   Logout
                 </Button>

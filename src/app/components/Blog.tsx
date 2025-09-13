@@ -1,294 +1,170 @@
-"use client"
-import { motion } from "framer-motion";
-import Link from "next/link";
-import Book from "@/../public/assets/Images/book.jpg";
-import Mind from "@/../public/assets/Images/Mind.png";
-import Image from "next/image";
-import Laptop from "@/../public/assets/Images/laptop.jpg";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import axios from 'axios';
 
-const Blog = () => {
-    return (
-        <div className="min-h-screen p-15 z-60 bg-[#fffcf1] ">
-            {/* Categories Header */}
-            <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="mb-10 bg-[#fffcf1]"
-            >
-                <h1 className="text-3xl font-extrabold mb-4 text-[#5a3e36] flex justify-center items-center">
-                    Explore Our Categories
-                </h1>
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="flex flex-wrap gap-3 mt-9 justify-center"
-                >
-                    <motion.span 
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-[#996568] px-5 py-2 rounded-full text-sm font-semibold text-white border border-[#b87a7d] hover:bg-[#b87a7d] transition duration-300 cursor-pointer"
-                    >
-                        #Tech
-                    </motion.span>
-                    <motion.span 
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-[#5a3e36] px-5 py-2 rounded-full text-sm font-semibold text-white border border-[#6d4c42] hover:bg-[#6d4c42] transition duration-300 cursor-pointer"
-                    >
-                        #Self-growth
-                    </motion.span>
-                    <motion.span 
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-[#996568] px-5 py-2 rounded-full text-sm font-semibold text-white border border-[#b87a7d] hover:bg-[#b87a7d] transition duration-300 cursor-pointer"
-                    >
-                        #Philosophy
-                    </motion.span>
-                    <motion.span 
-                        whileHover={{ scale: 1.05 }}
-                        className="bg-[#5a3e36] px-5 py-2 rounded-full text-sm font-semibold text-white border border-[#6d4c42] hover:bg-[#6d4c42] transition duration-300 cursor-pointer"
-                    >
-                        #Creativity
-                    </motion.span>
-                </motion.div>
-            </motion.div>
+// Blog data ka type
+interface BlogData {
+  _id: string;
+  title: string;
+  excerpt: string;
+  description: string;
+  category: string;
+  image: string;
+  createdAt: string; // ✅ latest nikalne ke liye zaroori
+}
 
-            {/* Blog Posts Grid */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {/* Blog Post 1 */}
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-white/80 backdrop-blur-sm"
-                >
-                    <motion.div 
-                        whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
-                    >
-                        <Image
-                            src={Laptop}
-                            alt="laptop"
-                            className="rounded-lg w-full h-full object-cover"
-                            width={300}
-                            height={100}
-                        />
-                    </motion.div>
-                    <div className="p-6">
-                        <motion.h2 
-                            whileHover={{ color: "#996568" }}
-                            className="text-xl font-bold mb-3 text-[#5a3e36] transition-colors duration-300"
-                        >
-                            Exploring the Dynamic World of Web Development
-                        </motion.h2>
-                        <motion.p 
-                            whileInView={{ opacity: 1 }}
-                            initial={{ opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            viewport={{ once: true }}
-                            className="text-[#5a3e36]/90 text-sm mb-5 leading-relaxed"
-                        >
-                            Join me on a journey through the ever-evolving landscape of web
-                            development, from front-end frameworks to back-end architectures...
-                        </motion.p>
-                        <div className="flex justify-between items-center text-[#5a3e36]/80 text-xs">
-                            <motion.span
-                                whileInView={{ opacity: 1 }}
-                                initial={{ opacity: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                                viewport={{ once: true }}
-                            >
-                                April 20, 2024
-                            </motion.span>
-                            <Link href="/blog/web-development" passHref>
-                                <motion.a
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    whileInView={{ opacity: 1 }}
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    className="text-[#996568] hover:text-[#b87a7d] font-semibold flex items-center"
-                                >
-                                    Read More
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 ml-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                </motion.a>
-                            </Link>
-                        </div>
-                    </div>
-                </motion.div>
+const Blog: React.FC = () => {
+  const [blogs, setBlogs] = useState<BlogData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-                {/* Blog Post 2 */}
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-white/80 backdrop-blur-sm"
-                >
-                    <motion.div 
-                        whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
-                    >
-                        <Image
-                            src={Mind}
-                            alt="mind"
-                            className="rounded-lg w-full h-full object-cover"
-                            width={300}
-                            height={100}
-                        />
-                    </motion.div>
-                    <div className="p-6">
-                        <motion.h2 
-                            whileHover={{ color: "#996568" }}
-                            className="text-xl font-bold mb-3 text-[#5a3e36] transition-colors duration-300"
-                        >
-                            The Art of Mindful Productivity: Finding Your Flow
-                        </motion.h2>
-                        <motion.p 
-                            whileInView={{ opacity: 1 }}
-                            initial={{ opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            viewport={{ once: true }}
-                            className="text-[#5a3e36]/90 text-sm mb-5 leading-relaxed"
-                        >
-                            Discover powerful strategies for enhancing productivity while
-                            maintaining a deep sense of balance and mindfulness in your daily life...
-                        </motion.p>
-                        <div className="flex justify-between items-center text-[#5a3e36]/80 text-xs">
-                            <motion.span
-                                whileInView={{ opacity: 1 }}
-                                initial={{ opacity: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                                viewport={{ once: true }}
-                            >
-                                April 20, 2024
-                            </motion.span>
-                            <Link href="/blog/web-development" passHref>
-                                <motion.a
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    whileInView={{ opacity: 1 }}
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    className="text-[#5a3e36] hover:text-[#6d4c42] font-semibold flex items-center"
-                                >
-                                    Read More
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 ml-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                </motion.a>
-                            </Link>
-                        </div>
-                    </div>
-                </motion.div>
+  // Blogs fetch karo
+  const fetchBlogs = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('/api/blog');
+      setBlogs(response.data.blogs);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-                {/* Blog Post 3 */}
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    className="rounded-xl hover:shadow-xl transition-shadow duration-300 group bg-white/80 backdrop-blur-sm"
-                >
-                    <motion.div 
-                        whileHover={{ scale: 1.03 }}
-                        className="h-52 rounded-lg relative flex items-center justify-center overflow-hidden bg-gray-100"
-                    >
-                        <Image
-                            src={Book}
-                            alt="Book"
-                            className="rounded-lg w-full h-full object-cover"
-                            width={300}
-                            height={100}
-                        />
-                    </motion.div>
-                    <div className="p-6">
-                        <motion.h2 
-                            whileHover={{ color: "#996568" }}
-                            className="text-xl font-bold mb-3 text-[#5a3e36] transition-colors duration-300"
-                        >
-                            Reflections on Existential Philosophy: Deeper Meanings
-                        </motion.h2>
-                        <motion.p 
-                            whileInView={{ opacity: 1 }}
-                            initial={{ opacity: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            viewport={{ once: true }}
-                            className="text-[#5a3e36]/90 text-sm mb-5 leading-relaxed"
-                        >
-                            Delve into the depths of existential philosophy, confronting the
-                            fundamental questions of existence, freedom, and responsibility...
-                        </motion.p>
-                        <div className="flex justify-between items-center text-[#5a3e36]/80 text-xs">
-                            <motion.span
-                                whileInView={{ opacity: 1 }}
-                                initial={{ opacity: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                                viewport={{ once: true }}
-                            >
-                                April 20, 2024
-                            </motion.span>
-                            <Link href="/blog/web-development" passHref>
-                                <motion.a
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    whileInView={{ opacity: 1 }}
-                                    initial={{ opacity: 0 }}
-                                    transition={{ duration: 0.6, delay: 0.3 }}
-                                    viewport={{ once: true }}
-                                    className="text-[#996568] hover:text-[#b87a7d] font-semibold flex items-center"
-                                >
-                                    Read More
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        className="h-4 w-4 ml-1"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                </motion.a>
-                            </Link>
-                        </div>
-                    </div>
-                </motion.div>
-            </div>
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  // Sirf 3 latest posts (date ke hisaab se sorted)
+  const latestPosts = [...blogs]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 3);
+
+  return (
+    <section className="min-h-screen font-serif bg-gradient-to-br from-[#fffcf1] via-[#fef7e6] to-[#f9f1e4] text-[#5a3e36] py-12 px-4 md:px-8 relative overflow-hidden">
+      {/* Subtle background pattern (optional, can be an SVG or an image) */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        {/* You can replace this with a subtle SVG pattern or a transparent PNG texture */}
+        <div className="absolute inset-0 bg-[url('/path/to/subtle-pattern.svg')] bg-repeat opacity-[0.03]"></div>
+      </div>
+
+      {/* Heading */}
+      <div className="text-center mb-8 md:mb-12 relative z-10">
+        <motion.h1
+          className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight leading-tight"
+          initial={{ opacity: 0, y: -30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          Our Latest Thoughts
+        </motion.h1>
+        <motion.p
+          className="text-lg md:text-xl text-[#5a3e36]/80 max-w-2xl mx-auto leading-relaxed"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+        >
+          Fresh insights, stories, and reflections from our team, crafted just for you.
+        </motion.p>
+        <motion.div
+          className="w-24 h-1 bg-[#996568] mx-auto mt-6 rounded-full"
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 96, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+        ></motion.div>
+      </div>
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="flex justify-center items-center py-20 relative z-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#996568]"></div>
         </div>
-    );
+      )}
+
+      {/* Blog Posts */}
+      {!isLoading && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto relative z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            key="latest"
+          >
+            {latestPosts.map((post, index) => (
+              <motion.div
+                key={post._id}
+                className="bg-[#fffcf1] rounded-xl overflow-hidden transition-all duration-300 flex flex-col group border border-[#e8c9a7]/70 shadow-lg hover:shadow-xl relative"
+                whileHover={{ y: -8, transition: { duration: 0.3, ease: "easeOut" } }}
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.15, ease: "easeOut" }}
+              >
+                {/* Image with subtle overlay */}
+                <div className="relative overflow-hidden h-52 md:h-60 rounded-t-lg">
+                  <Image
+                    src={post.image}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+
+                <div className="p-5 md:p-6 flex flex-col flex-grow">
+                  <div className="mb-3">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-[#996568] text-[#fffcf1] shadow-sm tracking-wide">
+                      {post.category}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl md:text-2xl font-bold mb-3 line-clamp-2 min-h-[64px] text-[#5a3e36]">
+                    {post.title}
+                  </h3>
+
+                  <div
+                    className="text-sm text-[#5a3e36]/70 mb-4 flex-grow leading-relaxed line-clamp-3 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: post.description }}
+                  ></div>
+
+                  <Link
+                    href={`/blog/${post._id}`}
+                    className="mt-auto inline-flex items-center text-sm font-semibold transition-all duration-300 group/readmore text-[#996568] hover:text-[#7b4f52] hover:underline"
+                  >
+                    Read More
+                    <motion.span
+                      className="inline-block ml-1 transition-transform duration-300 group-hover/readmore:translate-x-1"
+                    >
+                      →
+                    </motion.span>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      )}
+
+      {/* Agar blogs hi na ho */}
+      {!isLoading && latestPosts.length === 0 && (
+        <motion.div
+          className="text-center py-16 font-serif relative z-10"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3 className="text-2xl md:text-3xl font-bold mb-3 text-[#5a3e36]">
+            No captivating stories yet...
+          </h3>
+          <p className="text-[#5a3e36]/70 text-base md:text-lg max-w-md mx-auto">
+            Our creative minds are at work! New blog posts will appear here once they are published.
+          </p>
+        </motion.div>
+      )}
+    </section>
+  );
 };
 
 export default Blog;

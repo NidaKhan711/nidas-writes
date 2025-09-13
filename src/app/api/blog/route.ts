@@ -28,10 +28,22 @@ export async function GET(request: Request) {
         categoryColor: blog.categoryColor || "gray",
         image: blog.image,
         authorImage: blog.authorImage,
+        date: blog.date, // ← Date field add kiya
       });
     } else {
       const blogs = await blogModel.find({});
-      return NextResponse.json({ blogs });
+      return NextResponse.json({ 
+        blogs: blogs.map(blog => ({
+          _id: blog._id,
+          title: blog.title,
+          description: blog.content || blog.description,
+          authorName: blog.authorName,
+          category: blog.category,
+          image: blog.image,
+          authorImage: blog.authorImage,
+          date: blog.date, // ← Date field add kiya
+        }))
+      });
     }
   } catch (error) {
     console.error("Error fetching blog:", error);
@@ -85,6 +97,7 @@ export async function POST(req: Request) {
       category,
       image: imageUrl,
       authorImage: authorImageUrl,
+      date: new Date(), // ← Automatic date add kiya
     });
 
     return NextResponse.json({ success: true, blog: newBlog }, { status: 201 });

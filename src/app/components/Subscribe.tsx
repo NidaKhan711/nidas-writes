@@ -92,9 +92,9 @@ const Subscribe = () => {
               variants={itemVariants}
               className="space-y-2 text-center"
             >
-              <h2 className="text-2xl font-medium text-[#5a3e36]">
+              <h1 className="text-2xl font-medium text-[#5a3e36]">
                 Get updates, knowledge, and inspiration
-              </h2>
+              </h1>
               <p className="text-[#5a3e36]/90">
                 right where you need them.
               </p>
