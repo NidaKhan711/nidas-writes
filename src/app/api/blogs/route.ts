@@ -23,7 +23,6 @@ export async function GET(request: Request) {
       if (!blog) {
         return NextResponse.json({ error: "Blog not found" }, { status: 404 });
       }
-
       return NextResponse.json(blog);
     } else {
       const blogs = await blogModel.find({});
@@ -32,31 +31,32 @@ export async function GET(request: Request) {
   } catch (error: unknown) {
     console.error("Error fetching blog:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 // ---------- POST ----------
 export async function POST(req: Request) {
-  await connectDB();
   try {
+    await connectDB();
+
     const formData = await req.formData();
 
     const title = formData.get("title") as string;
-    const slug = formData.get("slug") as string;
     const description = formData.get("description") as string;
     const authorName = formData.get("authorName") as string;
     const category = (formData.get("category") as string) || "General";
+
+    // ✅ Slug generator
+    const slug = title
+      ? title.toLowerCase().trim().replace(/\s+/g, "-").replace(/&/g, "-and-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-")
+      : "new-post";
 
     // --------- Blog image ---------
     let imageUrl = "";
     const imageFile = formData.get("image") as File | null;
     if (imageFile) {
-      const bytes = await imageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+      const buffer = Buffer.from(await imageFile.arrayBuffer());
       const uploadRes = await cloudinary.uploader.upload(
         `data:${imageFile.type};base64,${buffer.toString("base64")}`,
         { folder: "blog_images" }
@@ -68,8 +68,7 @@ export async function POST(req: Request) {
     let authorImageUrl = "";
     const authorImageFile = formData.get("authorImage") as File | null;
     if (authorImageFile) {
-      const bytes = await authorImageFile.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+      const buffer = Buffer.from(await authorImageFile.arrayBuffer());
       const uploadRes = await cloudinary.uploader.upload(
         `data:${authorImageFile.type};base64,${buffer.toString("base64")}`,
         { folder: "author_images" }
@@ -88,13 +87,11 @@ export async function POST(req: Request) {
       date: new Date(),
     });
 
-    return NextResponse.json({ success: true, blog: newBlog }, { status: 201 });
+    return NextResponse.json({ success: true, blog: newBlog, message: "Blog uploaded successfully" }, { status: 201 });
   } catch (error: unknown) {
+    console.error("Upload error:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json(
-      { success: false, message: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
   }
 }
 
@@ -107,10 +104,7 @@ export async function DELETE(request: Request) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.json(
-        { message: "Blog ID is required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Blog ID is required" }, { status: 400 });
     }
 
     const blog = await blogModel.findById(id);
@@ -118,19 +112,18 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ message: "Blog not found" }, { status: 404 });
     }
 
-    // Cloudinary se image delete karna (agar URL hai)
+    // Cloudinary se blog image delete
     if (blog.image) {
-      const publicId = blog.image.split("/").pop()?.split(".")[0];
-      if (publicId) {
-        await cloudinary.uploader.destroy(`blog_images/${publicId}`);
-      }
+      const url = new URL(blog.image);
+      const publicId = url.pathname.split("/").slice(-1)[0].split(".")[0];
+      await cloudinary.uploader.destroy(`blog_images/${publicId}`);
     }
 
+    // Cloudinary se author image delete
     if (blog.authorImage) {
-      const publicId = blog.authorImage.split("/").pop()?.split(".")[0];
-      if (publicId) {
-        await cloudinary.uploader.destroy(`author_images/${publicId}`);
-      }
+      const url = new URL(blog.authorImage);
+      const publicId = url.pathname.split("/").slice(-1)[0].split(".")[0];
+      await cloudinary.uploader.destroy(`author_images/${publicId}`);
     }
 
     await blogModel.findByIdAndDelete(id);
@@ -139,9 +132,6 @@ export async function DELETE(request: Request) {
   } catch (error: unknown) {
     console.error("Error deleting blog:", error);
     const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json(
-      { message: errorMessage },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
