@@ -1,7 +1,7 @@
 // app/blog/[id]/page.tsx
 import { Metadata } from "next";
 import axios from "axios";
-import BlogContent from "@/app/components/blog/BlogContent";
+import BlogContent from "@/app/components/blogStyle/BlogContent";
 
 interface BlogData {
   _id: string;
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: BlogPageProps): Promise<Metad
   const { id } = await params;
 
   try {
-    const response = await axios.get(`${baseURL}/api/blog`, {
+    const response = await axios.get(`${baseURL}/api/blogs`, {
       params: { id },
     });
 

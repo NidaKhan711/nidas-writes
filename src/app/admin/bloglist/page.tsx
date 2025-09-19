@@ -19,7 +19,7 @@ const Page = () => {
   const fetchBlogs = async () => {
     try {
       setIsLoading(true)
-      const response = await axios.get('/api/blog');
+      const response = await axios.get('/api/blogs');
       setBlogs(response.data.blogs || []);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -41,7 +41,7 @@ const Page = () => {
     }
     
     try {
-      const response = await axios.delete(`/api/blog`, {
+      const response = await axios.delete(`/api/blogs`, {
         params: { id: mongoId }
       });
       toast.success(response.data.message);

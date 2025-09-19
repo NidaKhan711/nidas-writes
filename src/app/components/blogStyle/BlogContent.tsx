@@ -52,7 +52,7 @@ export default function BlogContent({ initialData, id }: SingleBlogClientProps) 
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get("/api/blog", {
+          const response = await axios.get("/api/blogs", {
             params: { id },
           });
           setData(response.data);
