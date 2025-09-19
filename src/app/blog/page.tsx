@@ -5,7 +5,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
 
+<<<<<<< HEAD
 const categories = ['All', 'physiology', 'Philosophy'];
+=======
+const categories = ['All', 'Physiology', 'Philosophy'];
+>>>>>>> cc4f4e8 (add update)
 
 // Define a type for the form data
 interface BlogData {
