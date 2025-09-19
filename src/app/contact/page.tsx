@@ -22,6 +22,26 @@ export default function App() {
   });
   const [status, setStatus] = useState("");
 
+  // Define social media links with their icons and URLs
+  const socialLinks = [
+    {
+      icon: Facebook,
+      href: "https://www.facebook.com", // Replace with your Facebook profile URL
+    },
+    {
+      icon: Twitter,
+      href: "https://www.twitter.com/your-username", // Replace with your Twitter profile URL
+    },
+    {
+      icon: Instagram,
+      href: "https://www.instagram.com/_nidabatool/", // Replace with your Instagram profile URL
+    },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/nida-batool-6a5599312/", // Replace with your LinkedIn profile URL
+    },
+  ];
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -106,12 +126,12 @@ export default function App() {
               </div>
               <div>
                 <h4 className="font-semibold text-lg">Phone Number</h4>
-                <p className="text-[#4a3930]/70">+92 123 4567890</p>
+                <p className="text-[#4a3930]/70">03100041834</p>
               </div>
             </div>
             
             <div className="flex items-start">
-              <div className="bg-[#f0e8dd] p-4 rounded-full mr-4 text-[#8a极6a]">
+              <div className="bg-[#f0e8dd] p-4 rounded-full mr-4 text-[#8a6a6a]">
                 <MapPin className="h-6 w-6" />
               </div>
               <div>
@@ -124,14 +144,16 @@ export default function App() {
           <div className="mt-12">
             <h4 className="font-semibold text-lg mb-4">Follow Our Journey</h4>
             <div className="flex space-x-4">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, index) => (
+              {socialLinks.map((link, index) => (
                 <motion.a
                   key={index}
-                  href="#"
+                  href={link.href}
                   whileHover={{ scale: 1.1, y: -3 }}
                   className="bg-[#f0e8dd] p-3 rounded-full cursor-pointer text-[#8a6a6a] transition-colors hover:bg-[#e4ddd4]"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <Icon className="h-5 w-5" />
+                  <link.icon className="h-5 w-5" />
                 </motion.a>
               ))}
             </div>
@@ -157,7 +179,7 @@ export default function App() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full p-3 rounded-lg border border-[极d9c7b4] bg-[#fdfaf5] text-[#4a3930] focus:ring-2 focus:ring-[#8a6a6a] outline-none transition-all"
+                  className="w-full p-3 rounded-lg border border-[#d9c7b4] bg-[#fdfaf5] text-[#4a3930] focus:ring-2 focus:ring-[#8a6a6a] outline-none transition-all"
                   placeholder="Your name"
                 />
               </div>
@@ -248,7 +270,7 @@ export default function App() {
       {/* Background decorative elements */}
       <div className="absolute top-20 left-10 w-72 h-72 bg-[#f9e4e6] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
       <div className="absolute top-40 right-10 w-72 h-72 bg-[#e4ddf9] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-      <div className="absolute bottom-20 left-1/4 w-极72 h-72 bg-[#f9f1e4] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      <div className="absolute bottom-20 left-1/4 w-72 h-72 bg-[#f9f1e4] rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
     </div>
   );
 }

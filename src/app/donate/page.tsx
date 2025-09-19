@@ -1,45 +1,60 @@
-'use client';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Heart, Shield, Gift, Coffee, Zap, CheckCircle } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { Heart, Shield, Gift, Coffee, Zap, CheckCircle } from "lucide-react";
 
 export default function DonatePage() {
-  const [donationAmount, setDonationAmount] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [donationAmount, setDonationAmount] = useState("");
+  const [selectedOption, setSelectedOption] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const donationOptions = [
-    { id: 'coffee', amount: 5, label: 'Buy me a Coffee', icon: Coffee },
-    { id: 'energy', amount: 10, label: 'Energy Boost', icon: Zap },
-    { id: 'support', amount: 25, label: 'Monthly Support', icon: Heart },
-    { id: 'generous', amount: 50, label: 'Generous Soul', icon: Gift },
+    { id: "coffee", amount: 200, label: "Buy me a Coffee", icon: Coffee },
+    { id: "energy", amount: 500, label: "Energy Boost", icon: Zap },
+    { id: "support", amount: 1000, label: "Monthly Support", icon: Heart },
+    { id: "generous", amount: 2500, label: "Generous Soul", icon: Gift },
   ];
 
+  // 🚀 EasyPaisa Payment Call
   const handleDonate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    
-    // Simulate donation processing
-    setTimeout(() => {
+
+    try {
+      const res = await fetch("/api/easypaisa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: donationAmount }),
+      });
+
+      const data = await res.json();
+
+      if (data?.paymentUrl) {
+        window.location.href = data.paymentUrl; // Redirect to EasyPaisa page
+      } else {
+        alert("Payment initialization failed!");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error connecting to EasyPaisa payment gateway");
+    } finally {
       setIsProcessing(false);
-      setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 3000);
-    }, 2000);
+    }
   };
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 ">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md mx-4 "
+          className="text-center p-8 bg-white rounded-2xl shadow-xl max-w-md mx-4"
         >
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4 mt-34" />
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Thank You! 🙏</h2>
           <p className="text-gray-600 mb-6">
-            Your generous donation of ${donationAmount} will help us continue creating amazing content.
+            Your generous donation of Rs.{donationAmount} will help us continue creating amazing content.
           </p>
           <button
             onClick={() => setIsSuccess(false)}
@@ -101,13 +116,13 @@ export default function DonatePage() {
                         }}
                         className={`p-4 rounded-xl border-2 transition-all duration-200 ${
                           selectedOption === option.id
-                            ? 'border-[#996568] bg-[#f9f5e9] shadow-md'
-                            : 'border-[#e8c9a7] hover:border-[#996568]'
+                            ? "border-[#996568] bg-[#f9f5e9] shadow-md"
+                            : "border-[#e8c9a7] hover:border-[#996568]"
                         }`}
                       >
                         <Icon className="w-6 h-6 text-[#996568] mx-auto mb-2" />
                         <div className="text-sm font-medium text-[#5a3e36]">
-                          ${option.amount}
+                          Rs.{option.amount}
                         </div>
                         <div className="text-xs text-[#5a3e36]/60 mt-1">
                           {option.label}
@@ -120,52 +135,29 @@ export default function DonatePage() {
 
               {/* Custom Amount */}
               <div>
-                <label htmlFor="customAmount" className="block text-sm font-medium text-[#5a3e36] mb-2">
+                <label
+                  htmlFor="customAmount"
+                  className="block text-sm font-medium text-[#5a3e36] mb-2"
+                >
                   Or enter custom amount
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5a3e36]">$</span>
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5a3e36]">
+                    Rs.
+                  </span>
                   <input
                     id="customAmount"
                     type="number"
                     value={donationAmount}
                     onChange={(e) => {
                       setDonationAmount(e.target.value);
-                      setSelectedOption('custom');
+                      setSelectedOption("custom");
                     }}
                     placeholder="0.00"
                     min="1"
-                    step="0.01"
-                    className="w-full pl-8 pr-4 py-3 border border-[#e8c9a7] rounded-lg focus:ring-2 focus:ring-[#996568] focus:border-transparent"
+                    step="1"
+                    className="w-full pl-10 pr-4 py-3 border border-[#e8c9a7] rounded-lg focus:ring-2 focus:ring-[#996568] focus:border-transparent"
                   />
-                </div>
-              </div>
-
-              {/* Payment Methods */}
-              <div>
-                <label className="block text-sm font-medium text-[#5a3e36] mb-3">
-                  Payment Method
-                </label>
-                <div className="space-y-2">
-                  <label className="flex items-center p-3 border border-[#e8c9a7] rounded-lg cursor-pointer hover:bg-[#f9f5e9]">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="paypal"
-                      className="text-[#996568] focus:ring-[#996568]"
-                      defaultChecked
-                    />
-                    <span className="ml-3 text-[#5a3e36]">PayPal</span>
-                  </label>
-                  <label className="flex items-center p-3 border border-[#e8c9a7] rounded-lg cursor-pointer hover:bg-[#f9f5e9]">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="card"
-                      className="text-[#996568] focus:ring-[#996568]"
-                    />
-                    <span className="ml-3 text-[#5a3e36]">Credit/Debit Card</span>
-                  </label>
                 </div>
               </div>
 
@@ -181,7 +173,7 @@ export default function DonatePage() {
                     Processing...
                   </div>
                 ) : (
-                  `Donate $${donationAmount || '0'}`
+                  `Donate with EasyPaisa (Rs.${donationAmount || "0"})`
                 )}
               </button>
             </form>
@@ -203,21 +195,27 @@ export default function DonatePage() {
                   <Heart className="w-5 h-5 text-[#996568] mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h4 className="font-semibold text-[#5a3e36]">Support Quality Content</h4>
-                    <p className="text-sm text-[#5a3e36]/80">Help us create more amazing articles and resources</p>
+                    <p className="text-sm text-[#5a3e36]/80">
+                      Help us create more amazing articles and resources
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Shield className="w-5 h-5 text-[#996568] mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h4 className="font-semibold text-[#5a3e36]">Ad-Free Experience</h4>
-                    <p className="text-sm text-[#5a3e36]/80">Keep the platform clean and focused on content</p>
+                    <p className="text-sm text-[#5a3e36]/80">
+                      Keep the platform clean and focused on content
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-start">
                   <Zap className="w-5 h-5 text-[#996568] mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h4 className="font-semibold text-[#5a3e36]">Faster Development</h4>
-                    <p className="text-sm text-[#5a3e36]/80">Accelerate new features and improvements</p>
+                    <p className="text-sm text-[#5a3e36]/80">
+                      Accelerate new features and improvements
+                    </p>
                   </div>
                 </div>
               </div>
@@ -238,32 +236,8 @@ export default function DonatePage() {
                 </ul>
               </p>
             </div>
-
-            {/* Security Assurance */}
-            <div className="bg-white rounded-2xl p-6 border border-[#e8c9a7] shadow-sm">
-              <div className="flex items-center mb-3">
-                <Shield className="w-5 h-5 text-green-600 mr-2" />
-                <h3 className="font-semibold text-[#5a3e36]">Secure Payments</h3>
-              </div>
-              <p className="text-sm text-[#5a3e36]/80">
-                All donations are processed through secure payment gateways. 
-                Your financial information is protected with industry-standard encryption.
-              </p>
-            </div>
           </motion.div>
         </div>
-
-        {/* Footer Note */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-center mt-12"
-        >
-          <p className="text-sm text-[#5a3e36]/60">
-            Thank you for considering a donation. Every contribution, no matter the size, makes a difference! 🌈
-          </p>
-        </motion.div>
       </div>
     </div>
   );
