@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import React from "react";
-import ClientWrapper from "./ClientWrapper"; 
- import { ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import ClientWrapper from "./ClientWrapper";
 
 export const metadata: Metadata = {
   title: "Mindora – Lifestyle & Thoughts Blog",
@@ -21,8 +19,6 @@ export const metadata: Metadata = {
   authors: [{ name: "Nida" }],
   creator: "Mindora",
   publisher: "Mindora",
-
-  // Open Graph (Facebook / LinkedIn etc.)
   openGraph: {
     title: "Mindora – A Space for Lifestyle & Thoughts",
     description:
@@ -40,35 +36,24 @@ export const metadata: Metadata = {
     locale: "en_US",
     type: "website",
   },
-
-  // Twitter Card
   twitter: {
     card: "summary_large_image",
     title: "Mindora – Lifestyle & Thoughts Blog",
-    description:
-      "Reflections on lifestyle, balance, and clarity. A blog for thoughtful minds.",
+    description: "Reflections on lifestyle, balance, and clarity. A blog for thoughtful minds.",
     images: ["https://yourdomain.com/twitter-image.jpg"],
     creator: "@yourhandle",
   },
-
-  // Icons (optional)
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
   },
-
-  // Other useful tags
   category: "Lifestyle",
   generator: "Next.js",
   applicationName: "Mindora",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -87,28 +72,10 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
-        <style>
-          {`
-            @font-face {
-              font-family: 'Libre Baskerville';
-              font-style: italic;
-              font-weight: 400;
-              font-display: swap;
-              src: url('/fonts/libre-baskerville-italic.woff2') format('woff2');
-            }
-            @font-face {
-              font-family: 'Geist Mono';
-              font-style: normal;
-              font-weight: 400;
-              font-display: swap;
-              src: url('/fonts/geist-mono.woff2') format('woff2');
-            }
-          `}
-        </style>
+      
       </head>
       <body className="antialiased">
-        <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light"/>
-        {/* 👇 ab sab kuch ClientWrapper handle karega */}
+        {/* Everything client-side */}
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
