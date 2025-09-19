@@ -16,7 +16,7 @@ const Page = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // ✅ Slug generator for SEO
+  // ✅ Slug generator
   const slugify = (text: string) =>
     text.toString().toLowerCase().trim()
       .replace(/\s+/g, "-")
@@ -24,16 +24,14 @@ const Page = () => {
       .replace(/[^\w\-]+/g, "")
       .replace(/\-\-+/g, "-");
 
-  // ✅ Safe image URLs (build-safe)
-  const safeImageUrl =
-    typeof window !== "undefined" && image
-      ? URL.createObjectURL(image)
-      : "/assets/images/uplod.png";
+  // ✅ Safe URLs
+  const safeImageUrl = typeof window !== "undefined" && image
+    ? URL.createObjectURL(image)
+    : "/assets/images/uplod.png";
 
-  const safeAuthorUrl =
-    typeof window !== "undefined" && authorImage
-      ? URL.createObjectURL(authorImage)
-      : "/assets/images/userup.png";
+  const safeAuthorUrl = typeof window !== "undefined" && authorImage
+    ? URL.createObjectURL(authorImage)
+    : "/assets/images/userup.png";
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const name = event.target.name;
@@ -44,23 +42,23 @@ const Page = () => {
   const onSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
-    
+
     try {
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("description", data.description);
       formData.append("category", data.category);
       formData.append("authorName", data.authorName);
-      
-      if (image) {
-        formData.append("image", image);
-      }
-      if (authorImage) {
-        formData.append("authorImage", authorImage);
-      }
 
-      const response = await axios.post('/api/blogs', formData);
-      
+      if (image) formData.append("image", image);
+      if (authorImage) formData.append("authorImage", authorImage);
+
+      // ✅ Deploy-safe base URL
+      const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
+      const response = await axios.post(`${baseURL}/api/blogs`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       if (response.data.success) {
         toast.success(response.data.message || "Blog uploaded successfully");
         setData({ title: "", description: "", category: "", authorName: "" });
@@ -87,7 +85,6 @@ const Page = () => {
 
   return (
     <>
-      {/* 🔥 SEO Head Section */}
       <Head>
         <title>{data.title ? `${data.title} | My Blog` : "Create New Blog Post"}</title>
         <meta
@@ -99,22 +96,17 @@ const Page = () => {
           content={data.title ? `${data.title}, ${data.category}, blog, philosophy, lifestyle` : "blog, articles, philosophy, lifestyle"}
         />
         <meta name="author" content={data.authorName || "Unknown Author"} />
-
-        {/* Open Graph */}
         <meta property="og:type" content="article" />
         <meta property="og:title" content={data.title || "New Blog Post"} />
         <meta property="og:description" content={data.description ? data.description.slice(0, 160) : "Check out this blog post."} />
         <meta property="og:image" content={safeImageUrl} />
         <meta property="og:url" content={`https://yourdomain.com/blog/${slugify(data.title || "new-post")}`} />
-
-        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={data.title || "New Blog Post"} />
         <meta name="twitter:description" content={data.description ? data.description.slice(0, 160) : "Check out this blog post."} />
         <meta name="twitter:image" content={safeImageUrl} />
       </Head>
 
-      {/* 📝 Blog Form */}
       <div className="min-h-screen p-4 md:p-8" style={{ backgroundColor: '#fffcf1' }}>
         <div className="p-4 sm:p-8 md:p-12 rounded-lg shadow-lg mx-auto max-w-6xl" style={{ backgroundColor: '#fffcf1', border: '1px solid #ddd7c7' }}>
           <h1 className="text-2xl sm:text-3xl font-serif font-bold mb-6 sm:mb-8" style={{ color: '#5a3e36' }}>
@@ -122,7 +114,7 @@ const Page = () => {
           </h1>
 
           <form onSubmit={onSubmitHandler} className="space-y-6">
-            {/* Title */}
+            {/* Title & Description */}
             <div>
               <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Blog Title</p>
               <input 
@@ -137,7 +129,6 @@ const Page = () => {
               />
             </div>
 
-            {/* Description */}
             <div>
               <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Blog Description</p>
               <textarea 
@@ -152,20 +143,13 @@ const Page = () => {
               />
             </div>
 
-            {/* Thumbnails */}
+            {/* Images & Author */}
             <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
               <div className="flex-1">
                 <p className="text-base sm:text-lg font-medium" style={{ color: '#5a3e36' }}>Blog Thumbnail</p>
                 <label htmlFor="thumbnail" className="cursor-pointer">
                   <div className="relative w-full max-w-xs mx-auto sm:mx-0">
-                    <Image
-                      src={safeImageUrl}
-                      alt="Blog Thumbnail"
-                      width={200}
-                      height={200}
-                      className="rounded-lg my-4 border-2 p-1 object-cover w-full aspect-square"
-                      style={{ borderColor: '#996568' }}
-                    />
+                    <Image src={safeImageUrl} alt="Blog Thumbnail" width={200} height={200} className="rounded-lg my-4 border-2 p-1 object-cover w-full aspect-square" style={{ borderColor: '#996568' }} />
                   </div>
                 </label>
                 <input onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)} type="file" id="thumbnail" hidden required disabled={isLoading} accept="image/*" />
@@ -175,21 +159,14 @@ const Page = () => {
                 <p className="text-base sm:text-lg font-medium" style={{ color: '#5a3e36' }}>Author Image</p>
                 <label htmlFor="authorImage" className="cursor-pointer">
                   <div className="relative w-32 h-32 mx-auto sm:mx-0">
-                    <Image
-                      src={safeAuthorUrl}
-                      alt="Author Image"
-                      width={128}
-                      height={128}
-                      className="rounded-full my-4 border-2 p-1 object-cover w-full h-full"
-                      style={{ borderColor: '#996568' }}
-                    />
+                    <Image src={safeAuthorUrl} alt="Author Image" width={128} height={128} className="rounded-full my-4 border-2 p-1 object-cover w-full h-full" style={{ borderColor: '#996568' }} />
                   </div>
                 </label>
                 <input onChange={(e) => setAuthorImage(e.target.files ? e.target.files[0] : null)} type="file" id="authorImage" hidden required disabled={isLoading} accept="image/*" />
               </div>
             </div>
 
-            {/* Author + Category */}
+            {/* Author & Category */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
               <div className="flex-1">
                 <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Author Name</p>
@@ -217,7 +194,7 @@ const Page = () => {
                 >
                   <option value="">Select Category</option>
                   <option value="Philosophy">Philosophy</option>
-                  <option value="Philosophy">Physiology</option>
+                  <option value="Physiology">Physiology</option>
                 </select>
               </div>
             </div>
