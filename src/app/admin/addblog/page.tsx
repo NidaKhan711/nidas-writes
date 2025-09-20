@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import Image from "next/image";
-import Head from "next/head";
-import { toast } from "react-toastify";
-import axios, { AxiosError } from "axios";
+import React, { useState, ChangeEvent, FormEvent, useRef } from 'react';
+import Image from 'next/image';
+import Head from 'next/head';
+import { toast } from 'react-toastify';
+import axios, { AxiosError } from 'axios';
 
 const Page = () => {
   const [image, setImage] = useState<File | null>(null);
@@ -15,23 +15,13 @@ const Page = () => {
     authorName: "",
   });
   const [isLoading, setIsLoading] = useState(false);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const authorImageInputRef = useRef<HTMLInputElement>(null);
 
-  // ✅ Slug generator
-  const slugify = (text: string) =>
-    text
-      .toString()
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, "-")
-      .replace(/&/g, "-and-")
-      .replace(/[^\w\-]+/g, "")
-      .replace(/\-\-+/g, "-");
-
-  // ✅ Safe URLs
-  const safeImageUrl =
-    typeof window !== "undefined" && image
-      ? URL.createObjectURL(image)
-      : "/assets/images/uplod.png";
+  // ✅ Safe URLs for preview
+  const safeImageUrl = typeof window !== "undefined" && image
+    ? URL.createObjectURL(image)
+    : "/assets/images/uplod.png";
 
   const safeAuthorUrl =
     typeof window !== "undefined" && authorImage
@@ -48,16 +38,21 @@ const Page = () => {
     setData((data) => ({ ...data, [name]: value }));
   };
 
-  // ✅ Upload to Cloudinary
-  const uploadToCloudinary = async (file: File) => {
+
+  // ✅ Cloudinary upload function
+  const uploadToCloudinary = async (file: File): Promise<string> => {
     const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
+    if (!cloudName || !uploadPreset) {
+      throw new Error("Cloudinary configuration is missing");
+    }
+
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", uploadPreset || "");
+    formData.append("upload_preset", uploadPreset);
 
-    const res = await fetch(
+    const response = await fetch(
       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
       {
         method: "POST",
@@ -65,7 +60,11 @@ const Page = () => {
       }
     );
 
-    const data = await res.json();
+    if (!response.ok) {
+      throw new Error("Image upload failed");
+    }
+
+    const data = await response.json();
     return data.secure_url;
   };
 
@@ -77,6 +76,7 @@ const Page = () => {
       let imageUrl = "";
       let authorImageUrl = "";
 
+      // Upload images to Cloudinary
       if (image) imageUrl = await uploadToCloudinary(image);
       if (authorImage) authorImageUrl = await uploadToCloudinary(authorImage);
 
@@ -86,7 +86,7 @@ const Page = () => {
         authorImage: authorImageUrl,
       };
 
-      // ✅ Deploy-safe base URL
+      // ✅ Send data to your API
       const baseURL = process.env.NEXT_PUBLIC_BASE_URL || "";
       const response = await axios.post(`${baseURL}/api/blogs`, payload);
 
@@ -100,9 +100,10 @@ const Page = () => {
         });
         setImage(null);
         setAuthorImage(null);
-        document
-          .querySelectorAll('input[type="file"]')
-          .forEach((input) => ((input as HTMLInputElement).value = ""));
+        
+        // Reset file inputs
+        if (imageInputRef.current) imageInputRef.current.value = "";
+        if (authorImageInputRef.current) authorImageInputRef.current.value = "";
       } else {
         toast.error(response.data.message || "Error uploading blog");
       }
@@ -123,12 +124,22 @@ const Page = () => {
     }
   };
 
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImage(e.target.files[0]);
+    }
+  };
+
+  const handleAuthorImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAuthorImage(e.target.files[0]);
+    }
+  };
+
   return (
     <>
       <Head>
-        <title>
-          {data.title ? `${data.title} | My Blog` : "Create New Blog Post"}
-        </title>
+        <title>{data.title ? `${data.title} | My Blog` : "Create New Blog Post"}</title>
       </Head>
 
       <div
@@ -173,7 +184,107 @@ const Page = () => {
               />
             </div>
 
-            {/* ...baqi form wahi rahega (description, category, author etc) ... */}
+            <div>
+              <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Blog Description</p>
+              <textarea 
+                name='description'
+                onChange={onChangeHandler}
+                value={data.description}
+                placeholder='Write your thoughts here...'
+                rows={6}
+                className='w-full mt-2 px-4 py-3 border rounded-md focus:outline-none'
+                style={{ borderColor: '#d3c6b6', color: '#5a3e36', backgroundColor: '#fffcf1', fontFamily: 'serif' }}
+                required disabled={isLoading}
+              />
+            </div>
+
+            {/* Images & Author */}
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-8">
+              <div className="flex-1">
+                <p className="text-base sm:text-lg font-medium" style={{ color: '#5a3e36' }}>Blog Thumbnail</p>
+                <label htmlFor="thumbnail" className="cursor-pointer">
+                  <div className="relative w-full max-w-xs mx-auto sm:mx-0">
+                    <Image 
+                      src={safeImageUrl} 
+                      alt="Blog Thumbnail Preview" 
+                      width={200} 
+                      height={200} 
+                      className="rounded-lg my-4 border-2 p-1 object-cover w-full aspect-square" 
+                      style={{ borderColor: '#996568' }} 
+                    />
+                  </div>
+                </label>
+                <input 
+                  ref={imageInputRef}
+                  onChange={handleImageChange}
+                  type="file" 
+                  id="thumbnail" 
+                  hidden 
+                  required 
+                  disabled={isLoading} 
+                  accept="image/*" 
+                />
+              </div>
+
+              <div className="flex-1">
+                <p className="text-base sm:text-lg font-medium" style={{ color: '#5a3e36' }}>Author Image</p>
+                <label htmlFor="authorImage" className="cursor-pointer">
+                  <div className="relative w-32 h-32 mx-auto sm:mx-0">
+                    <Image 
+                      src={safeAuthorUrl} 
+                      alt="Author Image Preview" 
+                      width={128} 
+                      height={128} 
+                      className="rounded-full my-4 border-2 p-1 object-cover w-full h-full" 
+                      style={{ borderColor: '#996568' }} 
+                    />
+                  </div>
+                </label>
+                <input 
+                  ref={authorImageInputRef}
+                  onChange={handleAuthorImageChange}
+                  type="file" 
+                  id="authorImage" 
+                  hidden 
+                  required 
+                  disabled={isLoading} 
+                  accept="image/*" 
+                />
+              </div>
+            </div>
+
+            {/* Author & Category */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+              <div className="flex-1">
+                <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Author Name</p>
+                <input
+                  name='authorName'
+                  onChange={onChangeHandler}
+                  value={data.authorName}
+                  type="text"
+                  placeholder='Enter Author Name'
+                  className='w-full mt-2 px-4 py-3 border rounded-md focus:outline-none'
+                  style={{ borderColor: '#d3c6b6', color: '#5a3e36', backgroundColor: '#fffcf1', fontFamily: 'serif' }}
+                  required disabled={isLoading}
+                />
+              </div>
+
+              <div className="flex-1">
+                <p className='text-base sm:text-lg font-medium' style={{ color: '#5a3e36' }}>Blog Category</p>
+                <select
+                  className='w-full mt-2 px-4 py-3 border rounded-md focus:outline-none'
+                  name="category"
+                  onChange={onChangeHandler}
+                  value={data.category}
+                  style={{ borderColor: '#d3c6b6', color: '#5a3e36', backgroundColor: '#fffcf1', fontFamily: 'serif' }}
+                  required disabled={isLoading}
+                >
+                  <option value="">Select Category</option>
+                  <option value="Philosophy">Philosophy</option>
+                  <option value="Physiology">Physiology</option>
+                </select>
+              </div>
+            </div>
 
             <div className="flex justify-center sm:justify-start">
               <button

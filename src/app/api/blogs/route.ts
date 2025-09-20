@@ -43,16 +43,22 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { title, description, authorName, category, image, authorImage } = body;
 
+    // Validation
+    if (!title || !description || !authorName) {
+      return NextResponse.json(
+        { success: false, message: "Title, description and author name are required" },
+        { status: 400 }
+      );
+    }
+
     // ✅ Slug generator
     const slug = title
-      ? title
-          .toLowerCase()
-          .trim()
-          .replace(/\s+/g, "-")
-          .replace(/&/g, "-and-")
-          .replace(/[^\w\-]+/g, "")
-          .replace(/\-\-+/g, "-")
-      : "new-post";
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "-")
+      .replace(/&/g, "-and-")
+      .replace(/[^\w\-]+/g, "")
+      .replace(/\-\-+/g, "-");
 
     const newBlog = await blogModel.create({
       title,
@@ -60,8 +66,8 @@ export async function POST(req: Request) {
       description,
       authorName,
       category: category || "General",
-      image,
-      authorImage,
+      image: image || "",
+      authorImage: authorImage || "",
       date: new Date(),
     });
 
@@ -104,16 +110,26 @@ export async function DELETE(request: Request) {
 
     // Cloudinary se blog image delete
     if (blog.image) {
-      const url = new URL(blog.image);
-      const publicId = url.pathname.split("/").slice(-1)[0].split(".")[0];
-      await cloudinary.uploader.destroy(`blog_images/${publicId}`);
+      try {
+        const url = new URL(blog.image);
+        const pathParts = url.pathname.split("/");
+        const publicIdWithFolder = pathParts.slice(-2).join("/").split(".")[0];
+        await cloudinary.uploader.destroy(publicIdWithFolder);
+      } catch (error) {
+        console.error("Error deleting blog image from Cloudinary:", error);
+      }
     }
 
     // Cloudinary se author image delete
     if (blog.authorImage) {
-      const url = new URL(blog.authorImage);
-      const publicId = url.pathname.split("/").slice(-1)[0].split(".")[0];
-      await cloudinary.uploader.destroy(`author_images/${publicId}`);
+      try {
+        const url = new URL(blog.authorImage);
+        const pathParts = url.pathname.split("/");
+        const publicIdWithFolder = pathParts.slice(-2).join("/").split(".")[0];
+        await cloudinary.uploader.destroy(publicIdWithFolder);
+      } catch (error) {
+        console.error("Error deleting author image from Cloudinary:", error);
+      }
     }
 
     await blogModel.findByIdAndDelete(id);
@@ -125,3 +141,12 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ message: errorMessage }, { status: 500 });
   }
 }
+
+// ✅ Body size limit configuration for Next.js App Router
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "4mb",
+    },
+  },
+};
