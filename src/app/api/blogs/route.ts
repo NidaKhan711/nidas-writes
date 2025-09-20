@@ -40,60 +40,50 @@ export async function POST(req: Request) {
   try {
     await connectDB();
 
-    const formData = await req.formData();
-
-    const title = formData.get("title") as string;
-    const description = formData.get("description") as string;
-    const authorName = formData.get("authorName") as string;
-    const category = (formData.get("category") as string) || "General";
+    const body = await req.json();
+    const { title, description, authorName, category, image, authorImage } = body;
 
     // ✅ Slug generator
     const slug = title
-      ? title.toLowerCase().trim().replace(/\s+/g, "-").replace(/&/g, "-and-").replace(/[^\w\-]+/g, "").replace(/\-\-+/g, "-")
+      ? title
+          .toLowerCase()
+          .trim()
+          .replace(/\s+/g, "-")
+          .replace(/&/g, "-and-")
+          .replace(/[^\w\-]+/g, "")
+          .replace(/\-\-+/g, "-")
       : "new-post";
-
-    // --------- Blog image ---------
-    let imageUrl = "";
-    const imageFile = formData.get("image") as File | null;
-    if (imageFile) {
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      const uploadRes = await cloudinary.uploader.upload(
-        `data:${imageFile.type};base64,${buffer.toString("base64")}`,
-        { folder: "blog_images" }
-      );
-      imageUrl = uploadRes.secure_url;
-    }
-
-    // --------- Author image ---------
-    let authorImageUrl = "";
-    const authorImageFile = formData.get("authorImage") as File | null;
-    if (authorImageFile) {
-      const buffer = Buffer.from(await authorImageFile.arrayBuffer());
-      const uploadRes = await cloudinary.uploader.upload(
-        `data:${authorImageFile.type};base64,${buffer.toString("base64")}`,
-        { folder: "author_images" }
-      );
-      authorImageUrl = uploadRes.secure_url;
-    }
 
     const newBlog = await blogModel.create({
       title,
       slug,
       description,
       authorName,
-      category,
-      image: imageUrl,
-      authorImage: authorImageUrl,
+      category: category || "General",
+      image,
+      authorImage,
       date: new Date(),
     });
 
-    return NextResponse.json({ success: true, blog: newBlog, message: "Blog uploaded successfully" }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        blog: newBlog,
+        message: "Blog uploaded successfully",
+      },
+      { status: 201 }
+    );
   } catch (error: unknown) {
     console.error("Upload error:", error);
-    const errorMessage = error instanceof Error ? error.message : "Internal server error";
-    return NextResponse.json({ success: false, message: errorMessage }, { status: 500 });
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json(
+      { success: false, message: errorMessage },
+      { status: 500 }
+    );
   }
 }
+
 
 // ---------- DELETE ----------
 export async function DELETE(request: Request) {
