@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal, Calendar, Clock, ArrowLeft, Share2, Check } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import DOMPurify from "dompurify";
 
 // Define a type for the blog data
 interface BlogData {
@@ -108,7 +109,10 @@ export default function BlogContent({ initialData, id }: SingleBlogClientProps) 
       .replace(/<a /g, '<a class="text-[#996568] hover:underline" ')
       .replace(/<img /g, '<img class="rounded-xl my-6 shadow-md" ');
     
-    return { __html: processedHtml };
+    // Sanitize the HTML with DOMPurify
+    const cleanHtml = DOMPurify.sanitize(processedHtml);
+    
+    return { __html: cleanHtml };
   };
 
   if (loading) {
