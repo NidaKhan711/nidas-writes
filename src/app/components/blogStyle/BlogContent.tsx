@@ -88,6 +88,29 @@ export default function BlogContent({ initialData, id }: SingleBlogClientProps) 
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Function to create markup for dangerouslySetInnerHTML
+  const createMarkup = () => {
+    if (!data || !data.description) return { __html: '' };
+    
+    // Process the HTML to ensure it works well with your styling
+    let processedHtml = data.description;
+    
+    // Add classes to HTML elements to match your styling
+    processedHtml = processedHtml
+      .replace(/<p>/g, '<p class="mb-6 leading-relaxed">')
+      .replace(/<h1>/g, '<h1 class="text-3xl font-bold mt-10 mb-4 text-[#5a3e36]">')
+      .replace(/<h2>/g, '<h2 class="text-2xl font-bold mt-8 mb-3 text-[#5a3e36]">')
+      .replace(/<h3>/g, '<h3 class="text-xl font-bold mt-6 mb-2 text-[#5a3e36]">')
+      .replace(/<ul>/g, '<ul class="list-disc pl-6 mb-6">')
+      .replace(/<ol>/g, '<ol class="list-decimal pl-6 mb-6">')
+      .replace(/<li>/g, '<li class="mb-2">')
+      .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-[#996568] bg-[#f3e9d7] italic pl-6 py-4 pr-4 my-6 rounded-r-lg">')
+      .replace(/<a /g, '<a class="text-[#996568] hover:underline" ')
+      .replace(/<img /g, '<img class="rounded-xl my-6 shadow-md" ');
+    
+    return { __html: processedHtml };
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen font-serif bg-gradient-to-br from-[#fffcf1] via-[#fef7e6] to-[#f9f1e4] text-[#5a3e36] py-12 px-4">
@@ -292,12 +315,13 @@ export default function BlogContent({ initialData, id }: SingleBlogClientProps) 
 
           {/* Post Content */}
           <motion.div
-            className="blog-content prose prose-lg max-w-none text-[#5a3e36] prose-headings:text-[#5a3e36] prose-a:text-[#996568] prose-strong:text-[#5a3e36] prose-blockquote:border-[#996568] prose-blockquote:bg-[#f3e9d7] prose-blockquote:italic prose-blockquote:text-[#5a3e36]/80 prose-blockquote:rounded-r-lg"
+            className="blog-content text-[#5a3e36]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            dangerouslySetInnerHTML={{ __html: data.description }}
-          />
+          >
+            <div dangerouslySetInnerHTML={createMarkup()} />
+          </motion.div>
 
           {/* Article End Actions */}
           <motion.div 

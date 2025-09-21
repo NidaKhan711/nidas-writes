@@ -195,7 +195,9 @@ const Page = () => {
                 className='w-full mt-2 px-4 py-3 border rounded-md focus:outline-none'
                 style={{ borderColor: '#d3c6b6', color: '#5a3e36', backgroundColor: '#fffcf1', fontFamily: 'serif' }}
                 required disabled={isLoading}
+                
               />
+              
             </div>
 
             {/* Images & Author */}
