@@ -93,7 +93,7 @@ export default function AboutPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.7 }}
         >
-          Founded in 2020, our platform has grown into a community of thinkers, writers, and seekers 
+          Founded in 2025, our platform has grown into a community of thinkers, writers, and seekers 
           who value depth over distraction. We curate content that challenges assumptions, sparks curiosity, 
           and nurtures the inner life through articles, guided reflections, and thought-provoking discussions.
         </motion.p>
