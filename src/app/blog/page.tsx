@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import axios from 'axios';
 
-const categories = ['All', 'Physiology', 'Philosophy'];
+const categories = ['All', 'Psychology', 'Philosophy'];
 
 // Define a type for the form data
 interface BlogData {
