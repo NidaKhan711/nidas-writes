@@ -283,7 +283,7 @@ const Page = () => {
                 >
                   <option value="">Select Category</option>
                   <option value="Philosophy">Philosophy</option>
-                  <option value="Physiology">Physiology</option>
+                  <option value="Physiology">Psychology</option>
                 </select>
               </div>
             </div>
